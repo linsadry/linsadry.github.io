@@ -363,6 +363,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
       <div class="sb-it" onclick="navTo('tratamentos')"><span class="sb-ic">💉</span>Tratamentos</div>
       <div class="sb-it" onclick="navTo('profissionais')"><span class="sb-ic">👨‍⚕️</span>Profissionais</div>
       <div class="sb-it" onclick="navTo('saude')"><span class="sb-ic">📈</span>Evolução Clínica</div>
+      <div class="sb-it" onclick="navTo('pendencias')"><span class="sb-ic">☑</span>Pendências</div>
       <div class="sb-it" onclick="navTo('anotacoes')"><span class="sb-ic">✍</span>Anotações</div>
       <div class="sb-sec">Pacientes</div>
       <div id="sbPatLinks"></div>
@@ -375,7 +376,6 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
       <div class="sb-it" onclick="navTo('resultados')"><span class="sb-ic">📄</span>Resultados</div>
       <div class="sb-it" onclick="navTo('acessos')"><span class="sb-ic">🔐</span>Acessos & Logins</div>
       <div class="sb-it" onclick="navTo('timeline')"><span class="sb-ic">◎</span>Linha do Tempo</div>
-      <div class="sb-it" onclick="navTo('pendencias')"><span class="sb-ic">☑</span>Pendências</div>
       <div class="sb-sec">Sistema</div>
       <div class="sb-it" onclick="navTo('config')"><span class="sb-ic">⚙</span>Configurações</div>
     </nav>
@@ -954,7 +954,31 @@ function swProfT(tab,btnEl){S.profTab=tab;document.querySelectorAll('#profTabs .
 function renderPInfo(el,pac){el.innerHTML=`<div class="g2"><div class="card"><div class="dtsec">Dados Pessoais</div>${dRow('Nome completo',pac.nome_completo)}${dRow('Nascimento',pac.data_nascimento?fmtD(pac.data_nascimento):null)}${dRow('Idade',pac.data_nascimento?calcAge(pac.data_nascimento)+' anos':null)}${dRow('CPF',pac.cpf)}${dRow('Telefone',pac.telefone)}${dRow('Endereço',pac.endereco)}${dRow('Emergência',pac.contato_emergencia)}</div><div class="card"><div class="dtsec">Saúde</div>${dRow('Tipo sanguíneo',pac.tipo_sanguineo)}${dRow('Cartão SUS',pac.cartao_sus)}${dRow('Alergias',pac.alergias)}${dRow('Diagnósticos',pac.diagnosticos)}${dRow('Medicamentos',pac.medicamentos_continuos)}${dRow('Médico ref.',pac.medico_referencia)}</div></div>`;}
 function renderPHosp(el,pac){const hs=S.hosps.filter(h=>h.paciente_id===pac.id);el.innerHTML=`<div class="sh" style="margin-bottom:12px"><div class="sec-t" style="font-size:14px">Hospitais & Serviços</div><button class="btn btn-p btn-sm" onclick="openHospM('${pac.id}')">+ Adicionar</button></div>${hs.length?hs.map(h=>`<div class="hcard"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="hn">🏥 ${h.nome}</div><div style="font-size:11.5px;color:var(--n70);display:flex;gap:7px;flex-wrap:wrap"><span class="chip cn">${h.tipo||'Hospital'}</span>${h.numero_cadastro?`<span>🆔 ${h.numero_cadastro}</span>`:''} ${h.telefone?`<span>📞 ${h.telefone}</span>`:''}</div></div><div style="display:flex;gap:4px"><button class="btn btn-xs btn-g" onclick="editHosp('${h.id}','${pac.id}')">✏</button><button class="btn btn-xs btn-d" onclick="del('hospitais','${h.id}',loadAll,renderProf)">✕</button></div></div>${h.endereco?`<div style="font-size:11.5px;color:var(--n70);margin-top:5px">📍 ${h.endereco}</div>`:''}${h.observacoes?`<div style="font-size:12.5px;margin-top:7px;padding:9px 11px;background:var(--bg);border-radius:var(--rsm);border:1px solid var(--n06)">${h.observacoes}</div>`:''}</div>`).join(''):emS('🏥','Sem hospitais','')}`;} 
 function renderPLog(el,pac){const ls=S.acs.filter(a=>a.paciente_id===pac.id||a.paciente_id===pac.id.toString());el.innerHTML=`<div class="sh" style="margin-bottom:12px"><div class="sec-t" style="font-size:14px">Portais & Logins</div><button class="btn btn-p btn-sm" onclick="openAcFor('${pac.nome}')">+ Adicionar</button></div><div class="card">${ls.length?ls.map(a=>`<div class="lr"><div class="lr-ic" style="background:var(--n15)">🔐</div><div class="lr-b"><div class="lr-t">${a.servico}</div><div class="lr-m">${a.login?`<span>👤 ${a.login}</span>`:''}</div></div><div class="lr-a">${a.login?`<button class="btn btn-xs btn-s" onclick="cpTxt('${a.login}','Login copiado!')">📋</button>`:''} ${a.senha?`<button class="btn btn-xs btn-s" onclick="cpTxt('${a.senha}','Senha copiada!')">🔑</button>`:''} ${a.url?`<a href="${a.url}" target="_blank" class="btn btn-xs btn-g">🌐</a>`:''}<button class="btn btn-xs btn-g" onclick="editAc('${a.id}')">✏</button></div></div>`).join(''):emS('🔐','Sem logins','')}</div>`;}
-function renderPTL(el,pac){let evs=[];S.cons.filter(c=>c.paciente_id===pac.id&&c.data_hora).forEach(c=>evs.push({data:new Date(c.data_hora),dataStr:c.data_hora,t:'c',lbl:c.especialidade||'Consulta',sub:c.profissional?'Dr(a). '+c.profissional:'',loc:c.local||'',obs:c.observacoes,by:c.cadastrado_por}));S.exs.filter(e=>e.paciente_id===pac.id&&(e.data_realizada||e.data_agendada)).forEach(e=>evs.push({data:new Date(e.data_realizada||e.data_agendada),dataStr:e.data_realizada||e.data_agendada,t:e.status==='Realizado'?'eo':'e',lbl:e.tipo,sub:e.status,loc:e.local||'',obs:e.resultado,by:e.cadastrado_por}));evs.sort((a,b)=>b.data-a.data);if(!evs.length){el.innerHTML=emS('◎','Sem eventos','');return;}const ic={c:'🩺',e:'🔬',eo:'✅',tr:'💉',tro:'💉'};const dc={c:'var(--p)',e:'var(--s)',eo:'var(--p)',tr:'#9b59b6',tro:'#7d3c98'};el.innerHTML=`<div class="tl">`+evs.map(ev=>`<div class="tln"><div class="tld" style="background:${dc[ev.t]};box-shadow:0 0 0 2px ${dc[ev.t]}"></div><div class="tldate">${fmtDT(ev.data)}${ev.by?' · por '+ev.by:''}</div><div class="tlc"><div class="tlct">${ic[ev.t]} ${ev.lbl}</div><div class="tlcm">${ev.sub?ev.sub+' ':''} ${ev.loc?'📍 '+ev.loc:''}</div>${ev.obs?`<div style="margin-top:4px;font-size:11px;color:var(--n70)">${ev.obs.substring(0,100)}${ev.obs.length>100?'…':''}</div>`:''}</div></div>`).join('')+'</div>';}
+function renderPTL(el,pac){
+  var evs=[];
+  S.cons.filter(function(c){return c.paciente_id===pac.id&&c.data_hora;}).forEach(function(c){evs.push({data:new Date(c.data_hora),dataStr:c.data_hora,t:'c',lbl:c.especialidade||'Consulta',sub:c.profissional?'Dr(a). '+c.profissional:'',loc:c.local||'',obs:c.observacoes,by:c.cadastrado_por});});
+  S.exs.filter(function(e){return e.paciente_id===pac.id&&(e.data_realizada||e.data_agendada);}).forEach(function(e){evs.push({data:new Date(e.data_realizada||e.data_agendada),dataStr:e.data_realizada||e.data_agendada,t:e.status==='Realizado'?'eo':'e',lbl:e.tipo,sub:e.status,loc:e.local||'',obs:e.resultado,by:e.cadastrado_por});});
+  (S.pends||[]).filter(function(p){return p.paciente_id===pac.id;}).forEach(function(p){evs.push({data:new Date(p.feita&&p.resolvida_em?p.resolvida_em:p.created_at),dataStr:p.feita&&p.resolvida_em?p.resolvida_em:p.created_at,t:p.feita?'pf':'pa',lbl:p.texto,sub:p.categoria,loc:'',obs:p.feita?'Resolvida em '+fmtD(p.resolvida_em):(p.data_alvo?'Antes de '+fmtD(p.data_alvo):''),by:p.cadastrado_por});});
+  (S.anots||[]).filter(function(a){return a.paciente_id===pac.id&&a.data;}).forEach(function(a){evs.push({data:new Date(a.data+'T12:00:00'),dataStr:a.data,t:'an',lbl:a.texto?a.texto.substring(0,60)+(a.texto.length>60?'...':''):'Anotação',sub:'',loc:'',obs:a.texto,by:a.cadastrado_por});});
+  evs.sort(function(a,b){return b.data-a.data;});
+  if(!evs.length){el.innerHTML=emS('◎','Sem eventos','');return;}
+  var icM={c:'🩺',e:'🔬',eo:'✅',tr:'💉',tro:'💉',pa:'☑',pf:'☑',an:'✍'};
+  var dcM={c:'var(--p)',e:'var(--s)',eo:'var(--p)',tr:'#9b59b6',tro:'#7d3c98',pa:'var(--a)',pf:'#5a7a28',an:'var(--n40)'};
+  var icStr={c:'🩺',e:'🔬',eo:'✅',tr:'💉',tro:'💉',pa:'☑',pf:'✅',an:'✍'};
+  el.innerHTML='<div class="tl">'+evs.map(function(ev){
+    var ds=fmtDT(ev.dataStr||String(ev.data));
+    var col=dcM[ev.t]||'var(--n40)';
+    var ico=icStr[ev.t]||'•';
+    return '<div class="tln">'+
+      '<div class="tld" style="background:'+col+';box-shadow:0 0 0 2px '+col+'"></div>'+
+      '<div class="tldate">'+ds+(ev.by?' · por '+ev.by:'')+'</div>'+
+      '<div class="tlc">'+
+      '<div class="tlct">'+ico+' '+ev.lbl+'</div>'+
+      '<div class="tlcm">'+(ev.sub?ev.sub+' ':'')+(ev.loc?'📍 '+ev.loc:'')+'</div>'+
+      (ev.obs&&ev.obs!==ev.lbl?'<div style="margin-top:4px;font-size:11px;color:var(--n70)">'+ev.obs.substring(0,120)+(ev.obs.length>120?'…':'')+'</div>':'')+
+      '</div></div>';
+  }).join('')+'</div>';
+}
 
 /* EDIT PERFIL PAC */
 function editPacPerfil(id){const p=S.pacs.find(p=>p.id===id);if(!p)return;document.getElementById('pId').value=p.id;document.getElementById('pND').value=p.nome||'';document.getElementById('pNC').value=p.nome_completo||'';document.getElementById('pNasc').value=p.data_nascimento||'';document.getElementById('pCpf').value=p.cpf||'';document.getElementById('pTel').value=p.telefone||'';document.getElementById('pEmerg').value=p.contato_emergencia||'';document.getElementById('pEnd').value=p.endereco||'';document.getElementById('pSangue').value=p.tipo_sanguineo||'';document.getElementById('pSus').value=p.cartao_sus||'';document.getElementById('pAlerg').value=p.alergias||'';document.getElementById('pDiag').value=p.diagnosticos||'';document.getElementById('pMeds').value=p.medicamentos_continuos||'';document.getElementById('pMedRef').value=p.medico_referencia||'';document.getElementById('ttlP').textContent='Editar — '+p.nome;openM('perfil');}
