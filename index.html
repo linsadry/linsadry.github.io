@@ -825,7 +825,44 @@ function renderProx(){
       (ev.loc?'<span>📍 '+ev.loc+'</span>':'')+' '+chSt(ev.st)+'</div></div></div>';
   }).join('');;
 }
-function renderPend(){const ids=fIds();const list=S.exs.filter(e=>ids.includes(e.paciente_id)&&e.status==='A fazer');const el=document.getElementById('pendencias');if(!list.length){el.innerHTML=emS('✅','Tudo em dia','');return;}el.innerHTML=list.slice(0,4).map(e=>`<div class="lr"><div class="lr-ic" style="background:var(--sl)">🔬</div><div class="lr-b"><div class="lr-t">${e.tipo}</div><div class="lr-m">${chPac(gPN(e.paciente_id))} ${e.data_agendada?`<span>📅 ${fmtD(e.data_agendada)}</span>`:'<span style="color:var(--danger)">Sem data</span>'} ${e.local?`<span>📍 ${e.local}</span>`:''} ${chPri(e.prioridade)}</div></div><div class="lr-a"><button class="btn btn-xs btn-p" onclick="markExOk('${e.id}')">✓</button></div></div>`).join('');}
+function renderPend(){
+  var ids=fIds();
+  var list=(S.pends||[]).filter(function(p){return ids.includes(p.paciente_id)&&!p.feita;});
+  // ordenar: com data_alvo primeiro (mais urgente), depois por criação
+  list.sort(function(a,b){
+    if(a.data_alvo&&b.data_alvo)return new Date(a.data_alvo)-new Date(b.data_alvo);
+    if(a.data_alvo)return -1;
+    if(b.data_alvo)return 1;
+    return new Date(a.created_at)-new Date(b.created_at);
+  });
+  var el=document.getElementById('pendencias');
+  if(!list.length){el.innerHTML=emS('✅','Tudo em dia','');return;}
+  var rows=[];
+  list.slice(0,4).forEach(function(p){
+    var vencida=p.data_alvo&&new Date(p.data_alvo+'T23:59:59')<new Date();
+    var div=document.createElement('div');
+    div.className='lr';
+    var ic=document.createElement('div');
+    ic.className='lr-ic';ic.style.cssText='background:var(--n15);font-size:16px';
+    ic.textContent=catIcon(p.categoria);
+    var body=document.createElement('div');body.className='lr-b';
+    var title=document.createElement('div');title.className='lr-t';
+    title.textContent=p.texto;
+    var meta=document.createElement('div');meta.className='lr-m';
+    meta.innerHTML=chPac(gPN(p.paciente_id))+
+      '<span class="chip cn">'+p.categoria+'</span>'+
+      (p.data_alvo?'<span style="color:'+(vencida?'var(--danger)':'var(--n70)')+'">📅 '+fmtD(p.data_alvo)+'</span>':'');
+    body.appendChild(title);body.appendChild(meta);
+    var actions=document.createElement('div');actions.className='lr-a';
+    var btnOk=document.createElement('button');btnOk.className='btn btn-xs btn-p';btnOk.textContent='✓';
+    btnOk.onclick=(function(pid){return function(){markPendFeita(pid);};})(p.id);
+    actions.appendChild(btnOk);
+    div.appendChild(ic);div.appendChild(body);div.appendChild(actions);
+    rows.push(div);
+  });
+  el.innerHTML='';
+  rows.forEach(function(r){el.appendChild(r);});
+}
 
 /* CALENDAR */
 function renderCal(){const y=S.calY,m=S.calM;const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];document.getElementById('calT').textContent=`${months[m]} ${y}`;const ids=fIds(),fd=new Date(y,m,1).getDay(),dm=new Date(y,m+1,0).getDate(),dp=new Date(y,m,0).getDate(),today=new Date();let html='';for(let i=0;i<fd;i++)html+=`<div class="ccell other"><div class="cdn">${dp-fd+i+1}</div></div>`;for(let d=1;d<=dm;d++){const isTod=today.getDate()===d&&today.getMonth()===m&&today.getFullYear()===y;const cs=S.cons.filter(c=>{if(!ids.includes(c.paciente_id))return false;const cd=new Date(c.data_hora);return cd.getFullYear()===y&&cd.getMonth()===m&&cd.getDate()===d;});const es=S.exs.filter(e=>{if(!ids.includes(e.paciente_id))return false;const ed=e.data_agendada||e.data_realizada;if(!ed)return false;const pt=ed.split('-');return+pt[0]===y&&+pt[1]===m+1&&+pt[2]===d;});const ps=S.plants.filter(pl=>{if(!pl.data_inicio)return false;const pd=new Date(pl.data_inicio);return pd.getFullYear()===y&&pd.getMonth()===m&&pd.getDate()===d;});const ts=(S.trts||[]).filter(tr=>{if(!tr.data_inicio)return false;const td=String(tr.data_inicio).split('T')[0].split('-');return +td[0]===y&&+td[1]===m+1&&+td[2]===d;});const dots=[...cs.map(()=>`<div class="cdot" style="background:var(--p)"></div>`),...es.map(()=>`<div class="cdot" style="background:var(--s)"></div>`),...ps.map(()=>`<div class="cdot" style="background:var(--a)"></div>`),...ts.map(()=>`<div class="cdot" style="background:#9b59b6"></div>`)].slice(0,4).join('');html+=`<div class="ccell ${isTod?'today':''}" onclick="openDay(${y},${m},${d})" style="cursor:pointer"><div class="cdn">${d}</div>${dots?`<div class="cdots">${dots}</div>`:''}</div>`;}document.getElementById('calGrid').innerHTML=html;}
