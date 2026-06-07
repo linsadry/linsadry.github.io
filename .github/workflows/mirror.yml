@@ -1,18 +1,4 @@
-name: Mirror to private repo
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  mirror:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Push mirror
+- name: Push mirror
         run: |
-          git remote add private https://x-access-token:${{ secrets.MIRROR_TOKEN }}@github.com/linsadry/cuidabem-private.git
-          git push private HEAD:main --force
+          git remote add teste https://x-access-token:${{ secrets.MIRROR_TOKEN }}@github.com/linsadry/linsadry.github.io.git
+          git push teste HEAD:main --force
