@@ -13,8 +13,6 @@ jobs:
           fetch-depth: 0
 
       - name: Push mirror
-        env:
-          TOKEN: ${{ secrets.MIRROR_TOKEN }}
         run: |
-          git remote add private https://x-access-token:${TOKEN}@github.com/linsadry/cuidabem-private.git
+          git remote add private https://x-access-token:${{ secrets.MIRROR_TOKEN }}@github.com/linsadry/cuidabem-private.git
           git push private HEAD:main --force
