@@ -2,7 +2,7 @@ name: Mirror to private repo
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
 
 jobs:
   mirror:
@@ -11,8 +11,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.MIRROR_TOKEN }}
 
       - name: Push mirror
+        env:
+          TOKEN: ${{ secrets.MIRROR_TOKEN }}
         run: |
-          git remote add private https://linsadry:${{ secrets.MIRROR_TOKEN }}@github.com/linsadry/cuidabem-private.git
-          git push private --mirror
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git remote set-url origin https://x-access-token:${TOKEN}@github.com/linsadry/linsadry.github.io.git
+          git remote add private https://x-access-token:${TOKEN}@github.com/linsadry/cuidabem-private.git
+          git push private HEAD:main --force
