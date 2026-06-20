@@ -13,3 +13,5 @@ jobs:
         run: |
           git remote add private https://linsadry:${{ secrets.MIRROR_PAT }}@github.com/linsadry/cuidabem-private.git
           git push private HEAD:main --force
+
+          
