@@ -10,8 +10,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Push mirror
+        env:
+          PAT: ${{ secrets.MIRROR_PAT }}
         run: |
-          git config --global credential.helper store
-          echo "https://linsadry:${{ secrets.MIRROR_PAT }}@github.com" > ~/.git-credentials
+          git config --global http.https://github.com/.extraheader "Authorization: Basic $(echo -n "linsadry:${PAT}" | base64)"
           git remote add private https://github.com/linsadry/cuidabem-private.git
           git push private HEAD:main --force
