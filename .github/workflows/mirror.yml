@@ -9,9 +9,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Debug
+        run: |
+          echo "Token length: ${#MIRROR_PAT}"
+          curl -s -o /dev/null -w "API status: %{http_code}\n" \
+            -H "Authorization: token $MIRROR_PAT" \
+            https://api.github.com/repos/linsadry/cuidabem-private
+        env:
+          MIRROR_PAT: ${{ secrets.MIRROR_PAT }}
       - name: Push mirror
         run: |
           git remote add private https://linsadry:${{ secrets.MIRROR_PAT }}@github.com/linsadry/cuidabem-private.git
           git push private HEAD:main --force
-
-          
