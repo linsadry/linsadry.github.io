@@ -221,6 +221,42 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
 .hcard:hover{border-color:rgba(171,194,112,0.28);box-shadow:var(--s2);}
 .hn{font-size:13.5px;font-weight:600;color:var(--n);margin-bottom:4px;}
 .cwrap{position:relative;height:210px;}
+/* ══ Evolução Clínica ══ */
+.ec-resumo{background:var(--card);border-radius:var(--rxl);border:1px solid var(--n06);box-shadow:var(--s2);padding:22px;margin-bottom:14px;}
+.ec-status{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:var(--rf);font-size:11.5px;font-weight:600;letter-spacing:.03em;}
+.ec-status.estavel{background:rgba(171,194,112,0.15);color:#5a7a28;}
+.ec-status.atencao{background:rgba(254,200,104,0.2);color:#9a7a00;}
+.ec-status.alerta{background:rgba(224,123,106,0.15);color:#c0392b;}
+.ec-diag{font-family:var(--fd);font-size:20px;font-weight:500;color:var(--n);margin:10px 0 4px;}
+.ec-resumo-txt{font-size:13px;color:var(--n70);line-height:1.55;margin-top:10px;padding:10px 14px;background:var(--card2);border-radius:var(--rmd);border-left:3px solid var(--p);}
+.ec-meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;}
+.ec-meta-item{font-size:12px;color:var(--n70);}
+.ec-meta-item strong{color:var(--n);font-weight:600;}
+.spark-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:14px;}
+.spark-card{background:var(--card);border-radius:var(--rlg);border:1px solid var(--n06);box-shadow:var(--s1);padding:14px 16px;}
+.spark-lbl{font-size:11px;color:var(--n40);font-weight:500;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px;}
+.spark-val{font-size:22px;font-weight:700;color:var(--n);font-family:var(--fd);line-height:1;}
+.spark-unit{font-size:12px;color:var(--n70);margin-left:3px;font-weight:400;}
+.spark-trend{display:flex;align-items:center;gap:4px;margin-top:4px;font-size:11.5px;}
+.spark-trend.up{color:#c0392b;}
+.spark-trend.down-good{color:#5a7a28;}
+.spark-trend.down-bad{color:#c0392b;}
+.spark-trend.stable{color:var(--n40);}
+.spark-svg{margin-top:8px;width:100%;height:32px;}
+.alerta-bar{background:var(--card);border-radius:var(--rlg);border:1px solid var(--n06);box-shadow:var(--s1);padding:12px 16px;margin-bottom:14px;}
+.alerta-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--n06);}
+.alerta-item:last-child{border-bottom:none;padding-bottom:0;}
+.alerta-ic{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.alerta-ic.warn{background:rgba(254,200,104,0.25);}
+.alerta-ic.danger{background:rgba(224,123,106,0.18);}
+.alerta-txt{font-size:12.5px;color:var(--n);line-height:1.4;}
+.alerta-sub{font-size:11px;color:var(--n70);margin-top:2px;}
+.ec-sec-t{font-size:11px;font-weight:600;color:var(--n40);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
+.trt-card{background:var(--card);border-radius:var(--rlg);border:1px solid var(--n06);box-shadow:var(--s1);padding:16px;}
+.trt-nome{font-size:14px;font-weight:600;color:var(--n);margin-bottom:6px;}
+.trt-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.trt-chip{font-size:11.5px;padding:3px 10px;border-radius:var(--rf);background:var(--card2);color:var(--n70);border:1px solid var(--n06);}
+.ec-edit-btn{float:right;font-size:11px;color:var(--p);cursor:pointer;font-weight:500;border:none;background:none;font-family:var(--fb);}
 .mchips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
 .mchip{padding:4px 10px;border-radius:var(--rf);font-size:11px;font-weight:500;border:1px solid var(--n15);background:transparent;color:var(--n70);cursor:pointer;transition:all var(--t);font-family:var(--fb);}
 .mchip:hover{border-color:var(--p);color:var(--p);}
@@ -453,7 +489,47 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
   </div>
   <div id="liProf"></div>
 </div>
-<div class="page" id="page-saude"><div class="sh"><div></div><button class="btn btn-p btn-sm" onclick="openM('medicao');upUnit()">+ Registrar medição</button></div><div class="card" style="margin-bottom:14px"><div style="display:flex;gap:11px;margin-bottom:12px;flex-wrap:wrap;align-items:center"><select class="fc" style="width:auto" id="chartPac" onchange="renderCharts();renderMChips()"></select><select class="fc" style="width:auto" id="chartPer" onchange="renderCharts()"><option value="3m">3 meses</option><option value="6m">6 meses</option><option value="1a">1 ano</option><option value="all">Tudo</option></select></div><div class="mchips" id="mChips"></div></div><div class="g2"><div class="card"><div class="lxs" style="margin-bottom:10px">Pressão Arterial — mmHg</div><div class="cwrap"><canvas id="cPA"></canvas></div></div><div class="card"><div class="lxs" style="margin-bottom:10px">Peso — kg</div><div class="cwrap"><canvas id="cPeso"></canvas></div></div><div class="card"><div class="lxs" style="margin-bottom:10px">Glicemia — mg/dL</div><div class="cwrap"><canvas id="cGlic"></canvas></div></div><div class="card"><div class="lxs" id="cCusLbl" style="margin-bottom:10px">Personalizado</div><div class="cwrap"><canvas id="cCus"></canvas></div></div></div><div class="card" style="margin-top:14px"><div class="sh"><div class="sec-t" style="font-size:14px">Histórico</div></div><div id="liM"><div class="lrow"><div class="spin"></div></div></div></div></div>
+<div class="page" id="page-saude">
+<div class="sh"><div style="display:flex;gap:8px;align-items:center"><select class="fc" style="width:auto" id="chartPac" onchange="renderSaude()"></select></div><button class="btn btn-p btn-sm" onclick="openM('medicao');upUnit()">+ Registrar</button></div>
+
+<!-- SEÇÃO 1: RESUMO CLÍNICO -->
+<div id="ecResumo" class="ec-resumo" style="display:none"></div>
+
+<!-- SEÇÃO 6: ALERTAS -->
+<div id="ecAlertas" style="display:none">
+  <div class="ec-sec-t" style="margin-top:4px">⚠️ Alertas automáticos</div>
+  <div class="alerta-bar" id="ecAlertasList"></div>
+</div>
+
+<!-- SEÇÃO 2: INDICADORES (sparklines) -->
+<div class="ec-sec-t" style="margin-top:4px" id="ecIndTitle">Indicadores</div>
+<div class="spark-grid" id="ecSparks"></div>
+
+<!-- SEÇÃO 5: TRATAMENTO -->
+<div id="ecTrt" style="display:none">
+  <div class="ec-sec-t">Tratamento atual</div>
+  <div id="ecTrtCard" class="trt-card"></div>
+</div>
+
+<!-- GRÁFICOS DETALHADOS (colapsáveis) -->
+<div class="ec-sec-t" style="margin-top:18px;cursor:pointer" onclick="togECCharts()" id="ecChartsToggle">▸ Gráficos detalhados</div>
+<div id="ecChartsArea" style="display:none">
+  <div style="display:flex;gap:11px;margin-bottom:12px;flex-wrap:wrap;align-items:center;margin-top:8px">
+    <select class="fc" style="width:auto" id="chartPer" onchange="renderCharts()"><option value="3m">3 meses</option><option value="6m">6 meses</option><option value="1a">1 ano</option><option value="all">Tudo</option></select>
+  </div>
+  <div class="mchips" id="mChips"></div>
+  <div class="g2">
+    <div class="card"><div class="lxs" style="margin-bottom:10px">Pressão Arterial — mmHg</div><div class="cwrap"><canvas id="cPA"></canvas></div></div>
+    <div class="card"><div class="lxs" style="margin-bottom:10px">Peso — kg</div><div class="cwrap"><canvas id="cPeso"></canvas></div></div>
+    <div class="card"><div class="lxs" style="margin-bottom:10px">Glicemia — mg/dL</div><div class="cwrap"><canvas id="cGlic"></canvas></div></div>
+    <div class="card"><div class="lxs" id="cCusLbl" style="margin-bottom:10px">Personalizado</div><div class="cwrap"><canvas id="cCus"></canvas></div></div>
+  </div>
+  <div class="card" style="margin-top:14px"><div class="sh"><div class="sec-t" style="font-size:14px">Histórico</div></div><div id="liM"><div class="lrow"><div class="spin"></div></div></div></div>
+</div>
+
+<!-- MODAL EDITAR RESUMO CLÍNICO -->
+<div class="bk" id="m-ecresumo"><div class="mb"><div class="mh"><div class="mt">Perfil Clínico</div><button class="mx" onclick="closeM('ecresumo')">✕</button></div><div class="mbody"><input type="hidden" id="ecPacId"><div class="ff"><label class="fl">Diagnóstico principal</label><input type="text" class="fc" id="ecDiag" placeholder="ex: Mieloma Múltiplo, Linfoma..."></div><div class="fr"><div class="ff"><label class="fl">Data do diagnóstico</label><input type="date" class="fc" id="ecDiagDt"></div><div class="ff"><label class="fl">Status clínico</label><select class="fc" id="ecStatus"><option value="estavel">🟢 Estável</option><option value="atencao">🟡 Atenção</option><option value="alerta">🔴 Alerta</option></select></div></div><div class="ff"><label class="fl">Notas clínicas / resumo</label><textarea class="fc" id="ecNotas" style="min-height:80px" placeholder="ex: Resposta profunda ao tratamento..."></textarea></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('ecresumo')">Cancelar</button><button class="btn btn-p btn-sm" onclick="saveECResumo()">Salvar</button></div></div></div>
+</div>
 
     <div class="page" id="page-anotacoes"><div class="sh"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-xs btn-g fa" id="filtA-all" onclick="setFiltA('')">Todas</button><button class="btn btn-xs btn-g" id="filtA-ativo" onclick="setFiltA('ativo')">🔴 Ativo</button><button class="btn btn-xs btn-g" id="filtA-resolucao" onclick="setFiltA('resolucao')">🟡 Em resolução</button><button class="btn btn-xs btn-g" id="filtA-resolvido" onclick="setFiltA('resolvido')">🟢 Resolvido</button></div><button class="btn btn-p btn-sm" onclick="openM('anotacao')">+ Nova anotação</button></div><div class="card"><div id="liA"><div class="lrow"><div class="spin"></div></div></div></div></div>
 
@@ -567,7 +643,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
 <div class="ff"><label class="fl">Observações</label><textarea class="fc" id="mObs"></textarea></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('medicao')">Cancelar</button><button class="btn btn-p btn-sm" onclick="saveMed()">Salvar</button></div></div></div>
 <div class="bk" id="m-anotacao"><div class="mb"><div class="mh"><div class="mt" id="ttlA">Nova Anotação</div><button class="mx" onclick="closeM('anotacao')">✕</button></div><div class="mbody"><input type="hidden" id="aId"><div class="fr"><div class="ff"><label class="fl">Paciente</label><select class="fc" id="aPac"></select></div><div class="ff"><label class="fl">Data</label><input type="date" class="fc" id="aDt"></div></div><div class="ff"><label class="fl">Anotação *</label><textarea class="fc" id="aTxt" style="min-height:100px"></textarea></div><div class="fr"><div class="ff"><label class="fl">Tags (vírgula)</label><input type="text" class="fc" id="aTags"></div><div class="ff"><label class="fl">Situação</label><select class="fc" id="aSit"><option value="ativo">🔴 Ativo</option><option value="resolucao">🟡 Em resolução</option><option value="resolvido">🟢 Resolvido</option></select></div></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('anotacao')">Cancelar</button><button class="btn btn-p btn-sm" onclick="saveAnot()">Salvar</button></div></div></div>
 <div class="bk" id="m-resultado"><div class="mb"><div class="mh"><div class="mt">Novo Resultado</div><button class="mx" onclick="closeM('resultado')">✕</button></div><div class="mbody"><div class="fr"><div class="ff"><label class="fl">Paciente</label><select class="fc" id="rPac"></select></div><div class="ff"><label class="fl">Tipo *</label><input type="text" class="fc" id="rTipo"></div></div><div class="fr"><div class="ff"><label class="fl">Data</label><input type="date" class="fc" id="rDt"></div><div class="ff"><label class="fl">Local</label><input type="text" class="fc" id="rLoc"></div></div><div class="ff"><label class="fl">Resultado / Laudo</label><textarea class="fc" id="rTxt" style="min-height:90px"></textarea></div><div class="ff"><label class="fl">Interpretação</label><textarea class="fc" id="rInterp"></textarea></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('resultado')">Cancelar</button><button class="btn btn-p btn-sm" onclick="saveRes()">Salvar</button></div></div></div>
-<div class="bk" id="m-pdfimport"><div class="mb"><div class="mh"><div class="mt">Importar PDF</div><button class="mx" onclick="closeM('pdfimport')">✕</button></div><div class="mbody"><div class="ff"><label class="fl">Paciente</label><select class="fc" id="pdfPac"></select></div><div class="pdfz" onclick="document.getElementById('pdfIn').click()"><div style="font-size:30px;margin-bottom:7px">📄</div><div style="font-size:13.5px;font-weight:500;margin-bottom:4px;color:var(--n)">Selecionar PDF</div><div style="font-size:12px;color:var(--n70)">Aceita PDF ou foto (JPG, PNG) — a IA extrai os dados automaticamente</div><input type="file" id="pdfIn" accept=".pdf,image/*" style="display:none" onchange="handlePDF(this)"></div><div id="pdfSt" style="display:none" class="aistrip"><div class="spin"></div> Lendo com IA...</div><div id="pdfPrev" style="display:none;margin-top:14px"><div class="lxs" style="margin-bottom:8px">Revise antes de salvar:</div><div class="ff"><label class="fl">Tipo</label><input type="text" class="fc" id="pTipo"></div><div class="fr"><div class="ff"><label class="fl">Data</label><input type="date" class="fc" id="pDt"></div><div class="ff"><label class="fl">Local</label><input type="text" class="fc" id="pLoc"></div></div><div class="ff"><label class="fl">Resultado</label><textarea class="fc" id="pRes" style="min-height:90px"></textarea></div><div class="ff"><label class="fl">Interpretação da IA</label><textarea class="fc" id="pInterp"></textarea></div></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('pdfimport')">Cancelar</button><button class="btn btn-p btn-sm" id="pdfSaveBtn" style="display:none" onclick="savePDFRes()">Salvar resultado</button></div></div></div>
+<div class="bk" id="m-pdfimport"><div class="mb"><div class="mh"><div class="mt">Importar PDF</div><button class="mx" onclick="closeM('pdfimport')">✕</button></div><div class="mbody"><div class="ff"><label class="fl">Paciente</label><select class="fc" id="pdfPac"></select></div><div class="pdfz" onclick="document.getElementById('pdfIn').click()"><div style="font-size:30px;margin-bottom:7px">📄</div><div style="font-size:13.5px;font-weight:500;margin-bottom:4px;color:var(--n)">Selecionar PDF</div><div style="font-size:12px;color:var(--n70)">Aceita PDF — extrai texto automaticamente para revisão</div><input type="file" id="pdfIn" accept=".pdf,image/*" style="display:none" onchange="handlePDF(this)"></div><div id="pdfSt" style="display:none" class="aistrip"><div class="spin"></div> Extraindo texto do PDF...</div><div id="pdfPrev" style="display:none;margin-top:14px"><div class="lxs" style="margin-bottom:8px">Revise antes de salvar:</div><div class="ff"><label class="fl">Tipo</label><input type="text" class="fc" id="pTipo"></div><div class="fr"><div class="ff"><label class="fl">Data</label><input type="date" class="fc" id="pDt"></div><div class="ff"><label class="fl">Local</label><input type="text" class="fc" id="pLoc"></div></div><div class="ff"><label class="fl">Resultado</label><textarea class="fc" id="pRes" style="min-height:90px"></textarea></div><div class="ff"><label class="fl">Texto extraído (revise e corrija acima)</label><textarea class="fc" id="pInterp" style="min-height:120px;font-size:11px;color:var(--n70)"></textarea></div></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('pdfimport')">Cancelar</button><button class="btn btn-p btn-sm" id="pdfSaveBtn" style="display:none" onclick="savePDFRes()">Salvar resultado</button></div></div></div>
 <div class="bk" id="m-acesso"><div class="mb"><div class="mh"><div class="mt" id="ttlAc">Novo Acesso</div><button class="mx" onclick="closeM('acesso')">✕</button></div><div class="mbody"><input type="hidden" id="acId"><div class="fr"><div class="ff"><label class="fl">Paciente</label><select class="fc" id="acPac"><option value="Ambos">👫 Ambos</option></select></div><div class="ff"><label class="fl">Serviço *</label><input type="text" class="fc" id="acServ"></div></div><div class="ff"><label class="fl">URL</label><input type="url" class="fc" id="acUrl" placeholder="https://..."></div><div class="ff"><label class="fl">Login</label><input type="text" class="fc" id="acLogin"></div><div class="ff"><label class="fl">Senha</label><input type="text" class="fc" id="acSenha"></div><div class="ff"><label class="fl">Observações</label><textarea class="fc" id="acObs"></textarea></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('acesso')">Cancelar</button><button class="btn btn-p btn-sm" onclick="saveAc()">Salvar</button></div></div></div>
 <div class="bk" id="m-perfil"><div class="mb mb-lg"><div class="mh"><div class="mt" id="ttlP">Editar Perfil</div><button class="mx" onclick="closeM('perfil')">✕</button></div><div class="mbody"><input type="hidden" id="pId"><div class="dtsec">Identificação</div><div class="fr"><div class="ff"><label class="fl">Nome de exibição *</label><input type="text" class="fc" id="pND"></div><div class="ff"><label class="fl">Nome completo</label><input type="text" class="fc" id="pNC"></div></div><div class="fr"><div class="ff"><label class="fl">Nascimento</label><input type="date" class="fc" id="pNasc"></div><div class="ff"><label class="fl">CPF</label><input type="text" class="fc" id="pCpf"></div></div><div class="fr"><div class="ff"><label class="fl">Telefone</label><input type="text" class="fc" id="pTel"></div><div class="ff"><label class="fl">Contato emergência</label><input type="text" class="fc" id="pEmerg"></div></div><div class="ff"><label class="fl">Endereço</label><input type="text" class="fc" id="pEnd"></div><div class="div"></div><div class="dtsec">Saúde</div><div class="fr"><div class="ff"><label class="fl">Tipo sanguíneo</label><select class="fc" id="pSangue"><option value="">—</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div><div class="ff"><label class="fl">Cartão SUS (CNS)</label><input type="text" class="fc" id="pSus"></div></div><div class="ff"><label class="fl">Alergias</label><textarea class="fc" id="pAlerg"></textarea></div><div class="ff"><label class="fl">Diagnósticos</label><textarea class="fc" id="pDiag"></textarea></div><div class="ff"><label class="fl">Medicamentos de uso contínuo</label><textarea class="fc" id="pMeds"></textarea></div><div class="ff"><label class="fl">Médico de referência (SUS)</label><input type="text" class="fc" id="pMedRef"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('perfil')">Cancelar</button><button class="btn btn-p btn-sm" onclick="savePacPerfil()">Salvar</button></div></div></div>
 <div class="bk" id="m-hospital"><div class="mb"><div class="mh"><div class="mt" id="ttlH">Novo Hospital</div><button class="mx" onclick="closeM('hospital')">✕</button></div><div class="mbody"><input type="hidden" id="hId"><input type="hidden" id="hPacId"><div class="fr"><div class="ff"><label class="fl">Nome *</label><input type="text" class="fc" id="hNome"></div><div class="ff"><label class="fl">Tipo</label><select class="fc" id="hTipo"><option>Hospital</option><option>Clínica</option><option>UBS</option><option>Laboratório</option><option>CAPS</option><option>Outro</option></select></div></div><div class="fr"><div class="ff"><label class="fl">Nº prontuário</label><input type="text" class="fc" id="hNum"></div><div class="ff"><label class="fl">Telefone</label><input type="text" class="fc" id="hTel"></div></div><div class="ff"><label class="fl">Endereço</label><input type="text" class="fc" id="hEnd"></div><div class="ff"><label class="fl">Observações</label><textarea class="fc" id="hObs"></textarea></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('hospital')">Cancelar</button><button class="btn btn-p btn-sm" onclick="saveHosp()">Salvar</button></div></div></div>
@@ -662,7 +738,7 @@ function startApp(user){
   var cn=document.getElementById('cfgNome');if(cn)cn.value=S.uName;
   loadPacs().catch(function(){});
   loadAll().catch(function(){});
-  setupRT();popSelects();setDefDates();loadEC();setNotifSt();schedNotifs();
+  setupRT();popSelects();loadEC();setNotifSt();schedNotifs();
   renderDash();
   setTimeout(checkLembretes,2000);
 }
@@ -747,7 +823,7 @@ async function loadAll(){
 }
 
 function setupRT(){
-  const rt={consultas:async()=>{const{data}=await db.from('consultas').select('*').order('data_hora',{ascending:false});if(data){S.cons=data;renderConsultas();renderDash();}},exames:async()=>{const{data}=await db.from('exames').select('*').order('created_at',{ascending:false});if(data){S.exs=data;renderExames();renderDash();}},medicoes:async()=>{const{data}=await db.from('medicoes').select('*').order('data_hora',{ascending:false});if(data){S.meds=data;renderCharts();renderMeds();}},anotacoes:async()=>{const{data}=await db.from('anotacoes').select('*').order('data',{ascending:false});if(data){S.anots=data;renderAnots();}},pacientes:async()=>{await loadPacs();},cuidadores:async()=>{const{data}=await db.from('cuidadores').select('*');if(data){S.cuids=data;renderCuids();popSelects();}},plantoes:async()=>{const{data}=await db.from('plantoes').select('*').order('data_inicio',{ascending:false});if(data){S.plants=data;renderPlants();}},contas:async()=>{const{data}=await db.from('contas').select('*').order('vencimento',{ascending:true});if(data){S.contas=data;renderContas();renderFinSt();}}};
+  const rt={consultas:async()=>{const{data}=await db.from('consultas').select('*').order('data_hora',{ascending:false});if(data){S.cons=data;renderConsultas();renderDash();}},exames:async()=>{const{data}=await db.from('exames').select('*').order('created_at',{ascending:false});if(data){S.exs=data;renderExames();renderDash();}},medicoes:async()=>{const{data}=await db.from('medicoes').select('*').order('data_hora',{ascending:false});if(data){S.meds=data;renderSaude();}},anotacoes:async()=>{const{data}=await db.from('anotacoes').select('*').order('data',{ascending:false});if(data){S.anots=data;renderAnots();}},pacientes:async()=>{await loadPacs();},cuidadores:async()=>{const{data}=await db.from('cuidadores').select('*');if(data){S.cuids=data;renderCuids();popSelects();}},plantoes:async()=>{const{data}=await db.from('plantoes').select('*').order('data_inicio',{ascending:false});if(data){S.plants=data;renderPlants();}},contas:async()=>{const{data}=await db.from('contas').select('*').order('vencimento',{ascending:true});if(data){S.contas=data;renderContas();renderFinSt();}}};
   const ch=db.channel('rt');Object.keys(rt).forEach(t=>ch.on('postgres_changes',{event:'*',schema:'public',table:t},rt[t]));ch.subscribe();
 }
 
@@ -787,7 +863,7 @@ function renderCfgPacs(){const el=document.getElementById('cfgPacs');if(!el)retu
 
 /* NAV */
 const PM={dashboard:{e:'Início',h:'Dashboard'},consultas:{e:'Gestão',h:'Consultas'},exames:{e:'Gestão',h:'Exames'},saude:{e:'Clínico',h:'Evolução Clínica'},anotacoes:{e:'Registros',h:'Anotações'},perfil:{e:'Paciente',h:'Perfil'},cuidadores:{e:'Cuidado',h:'Cuidadores'},plantoes:{e:'Cuidado',h:'Escala de Plantões'},financeiro:{e:'Financeiro',h:'Financeiro'},resultados:{e:'Dados',h:'Resultados'},acessos:{e:'Dados',h:'Acessos & Logins'},timeline:{e:'Histórico',h:'Linha do Tempo'},pendencias:{e:'Cuidado',h:'Pendências'},config:{e:'Sistema',h:'Configurações'}};
-function navTo(page){document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.sb-it').forEach(n=>n.classList.remove('on'));document.getElementById('page-'+page)?.classList.add('on');document.querySelector(`.sb-it[onclick="navTo('${page}')"]`)?.classList.add('on');const m=PM[page]||{e:'',h:page};document.getElementById('tbEye').textContent=m.e;document.getElementById('tbTitle').textContent=m.h;closeSb();const rs={tratamentos:renderTrts,profissionais:renderProfs,consultas:async()=>{await loadAll();renderConsultas();},exames:renderExames,saude:()=>{renderCharts();renderMeds();renderMChips();},anotacoes:renderAnots,resultados:renderRes,acessos:renderAcs,timeline:renderTL,pendencias:()=>{renderPends();popPendCons();},dashboard:renderDash,cuidadores:renderCuids,plantoes:renderPlants,financeiro:()=>{renderContas();renderFinSt();},config:()=>{renderCfgPacs();const e=document.getElementById('cfgNome');if(e)e.value=S.uName;atualizarStatusBio();}};if(rs[page])rs[page]();}
+function navTo(page){document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.sb-it').forEach(n=>n.classList.remove('on'));document.getElementById('page-'+page)?.classList.add('on');document.querySelector(`.sb-it[onclick="navTo('${page}')"]`)?.classList.add('on');const m=PM[page]||{e:'',h:page};document.getElementById('tbEye').textContent=m.e;document.getElementById('tbTitle').textContent=m.h;closeSb();const rs={tratamentos:renderTrts,profissionais:renderProfs,consultas:async()=>{await loadAll();renderConsultas();},exames:renderExames,saude:()=>{renderSaude();},anotacoes:renderAnots,resultados:renderRes,acessos:renderAcs,timeline:renderTL,pendencias:()=>{renderPends();popPendCons();},dashboard:renderDash,cuidadores:renderCuids,plantoes:renderPlants,financeiro:()=>{renderContas();renderFinSt();},config:()=>{renderCfgPacs();const e=document.getElementById('cfgNome');if(e)e.value=S.uName;atualizarStatusBio();}};if(rs[page])rs[page]();}
 function navToProf(pacId){S.curPacId=pacId;const p=S.pacs.find(x=>x.id===pacId);document.getElementById('tbEye').textContent='Paciente';document.getElementById('tbTitle').textContent=p?.nome||'Perfil';document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));document.getElementById('page-perfil').classList.add('on');closeSb();renderProf();}
 
 /* FILTER */
@@ -1042,6 +1118,184 @@ function renderCharts(){
   }
 }
 function buildC(id,datasets,unit){const ctx=document.getElementById(id);if(!ctx)return;if(S.charts[id])S.charts[id].destroy();S.charts[id]=new Chart(ctx,{type:'line',data:{labels:datasets[0]?.d.map(m=>fmtD(m.data_hora))||[],datasets:datasets.map(d=>({label:d.l,data:d.d.map(m=>m.valor),borderColor:d.c,backgroundColor:d.c+'18',tension:0.4,pointRadius:4,fill:true,borderWidth:2,pointBackgroundColor:d.c,pointBorderColor:'#FDFCF8',pointBorderWidth:2}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11,family:'Plus Jakarta Sans'},boxWidth:8,usePointStyle:true,color:'#473C33'}},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y} ${unit}`},backgroundColor:'#473C33',padding:9,cornerRadius:8}},scales:{x:{ticks:{font:{size:10},color:'#47433355',maxTicksLimit:8},grid:{color:'rgba(71,60,51,0.04)'}},y:{ticks:{font:{size:10},color:'#47433355'},grid:{color:'rgba(71,60,51,0.04)'}}}}});}
+/* ══════════════════════════════════════════
+   EVOLUÇÃO CLÍNICA — renderSaude e seções
+═══════════════════════════════════════════ */
+function renderSaude(){
+  var pac=document.getElementById('chartPac')?.value||S.pacs[0]?.nome||'';
+  renderECResumo(pac);
+  renderECSparks(pac);
+  renderECAlertas(pac);
+  renderECTrt(pac);
+  renderCharts();
+  renderMeds();
+  renderMChips();
+}
+
+function togECCharts(){
+  var area=document.getElementById('ecChartsArea');
+  var tog=document.getElementById('ecChartsToggle');
+  var open=area.style.display==='none';
+  area.style.display=open?'block':'none';
+  tog.textContent=(open?'▾':'▸')+' Gráficos detalhados';
+  if(open){renderCharts();renderMeds();renderMChips();}
+}
+
+function renderECResumo(pac){
+  var el=document.getElementById('ecResumo');if(!el)return;
+  var p=S.pacs.find(function(x){return x.nome===pac;});
+  if(!p){el.style.display='none';return;}
+  el.style.display='block';
+  var stLabel={estavel:'🟢 Estável',atencao:'🟡 Atenção',alerta:'🔴 Alerta'};
+  var st=p.status_clinico||'estavel';
+  // Próxima consulta
+  var proxCons=(S.cons||[]).filter(function(c){return c.paciente_id===p.id&&c.status!=='Realizada'&&c.data_hora;}).sort(function(a,b){return new Date(a.data_hora)-new Date(b.data_hora);})[0];
+  // Última medição
+  var ultMed=(S.meds||[]).filter(function(m){return m.paciente_id===p.id;}).sort(function(a,b){return new Date(b.data_hora)-new Date(a.data_hora);})[0];
+  var metaHtml='';
+  if(p.diagnostico_data)metaHtml+='<div class="ec-meta-item"><strong>Diagnóstico:</strong> '+fmtD(p.diagnostico_data)+'</div>';
+  if(proxCons)metaHtml+='<div class="ec-meta-item"><strong>Próxima consulta:</strong> '+fmtDT(proxCons.data_hora)+(proxCons.especialidade?' · '+esc(proxCons.especialidade):'')+'</div>';
+  if(ultMed)metaHtml+='<div class="ec-meta-item"><strong>Última medição:</strong> '+fmtDT(ultMed.data_hora)+'</div>';
+  el.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">'
+    +'<div style="flex:1;min-width:200px">'
+    +'<span class="ec-status '+st+'">'+stLabel[st]+'</span>'
+    +'<div class="ec-diag">'+(p.diagnostico?esc(p.diagnostico):'Diagnóstico não informado')+'</div>'
+    +(p.notas_clinicas?'<div class="ec-resumo-txt">'+esc(p.notas_clinicas)+'</div>':'')
+    +(metaHtml?'<div class="ec-meta">'+metaHtml+'</div>':'')
+    +'</div>'
+    +'<button class="ec-edit-btn" onclick="openECResumo(\''+p.id+'\')">✏ Editar</button>'
+    +'</div>';
+}
+
+function openECResumo(pacId){
+  var p=S.pacs.find(function(x){return x.id===pacId;});if(!p)return;
+  document.getElementById('ecPacId').value=pacId;
+  document.getElementById('ecDiag').value=p.diagnostico||'';
+  document.getElementById('ecDiagDt').value=p.diagnostico_data||'';
+  document.getElementById('ecStatus').value=p.status_clinico||'estavel';
+  document.getElementById('ecNotas').value=p.notas_clinicas||'';
+  openM('ecresumo');
+}
+
+async function saveECResumo(){
+  var id=document.getElementById('ecPacId').value;
+  var d={diagnostico:document.getElementById('ecDiag').value.trim(),diagnostico_data:document.getElementById('ecDiagDt').value||null,status_clinico:document.getElementById('ecStatus').value,notas_clinicas:document.getElementById('ecNotas').value.trim()};
+  var{error}=await db.from('pacientes').update(d).eq('id',id);
+  if(error){toast('Erro: '+error.message,'error');return;}
+  toast('Perfil clínico salvo!','ok');
+  closeM('ecresumo');
+  await loadPacs();
+  renderECResumo(document.getElementById('chartPac')?.value||S.pacs[0]?.nome||'');
+}
+
+function renderECSparks(pac){
+  var el=document.getElementById('ecSparks');if(!el)return;
+  var ids=S.pacs.filter(function(p){return p.nome===pac;}).map(function(p){return p.id;});
+  var meds=S.meds.filter(function(m){return ids.includes(m.paciente_id);});
+  if(!meds.length){el.innerHTML='<div style="color:var(--n40);font-size:13px;padding:8px 0">Nenhuma medição registrada</div>';return;}
+  var params=[...new Set(meds.map(function(m){return m.parametro;}))];
+  // Peso tem tendência "down-good" se perder muito
+  var pesoDownBad=function(p){return p==='Peso';};
+  el.innerHTML=params.map(function(param){
+    var series=meds.filter(function(m){return m.parametro===param;}).sort(function(a,b){return new Date(a.data_hora)-new Date(b.data_hora);});
+    var last=series[series.length-1];
+    var prev=series.length>1?series[series.length-2]:null;
+    var vals=series.map(function(m){return parseFloat(m.valor);}).filter(function(v){return !isNaN(v);});
+    var lastVal=parseFloat(last.valor);
+    var diff=prev?lastVal-parseFloat(prev.valor):0;
+    var diffAbs=Math.abs(diff).toFixed(1);
+    var trendCls='stable',trendTxt='→ Estável';
+    if(Math.abs(diff)>0.01){
+      var going=diff>0?'up':'down';
+      trendCls=going==='up'?'up':(pesoDownBad(param)?'down-bad':'down-good');
+      trendTxt=(diff>0?'↑ +':('↓ -'))+diffAbs+' '+( last.unidade||'');
+    }
+    // Sparkline SVG
+    var sparkSvg='';
+    if(vals.length>1){
+      var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
+      var range=mx-mn||1;
+      var W=120,H=28;
+      var pts=vals.map(function(v,i){
+        var x=vals.length===1?W/2:i*(W/(vals.length-1));
+        var y=H-(((v-mn)/range)*(H-4)+2);
+        return x.toFixed(1)+','+y.toFixed(1);
+      }).join(' ');
+      sparkSvg='<svg class="spark-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">'
+        +'<polyline points="'+pts+'" fill="none" stroke="var(--p)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
+        +'<circle cx="'+parseFloat(vals.length===1?W/2:(vals.length-1)*(W/(vals.length-1))).toFixed(1)+'" cy="'+(H-(((lastVal-mn)/range)*(H-4)+2)).toFixed(1)+'" r="2.5" fill="var(--p)"/>'
+        +'</svg>';
+    }
+    return '<div class="spark-card">'
+      +'<div class="spark-lbl">'+esc(param)+'</div>'
+      +'<div><span class="spark-val">'+lastVal+'</span><span class="spark-unit">'+(last.unidade||'')+'</span></div>'
+      +'<div class="spark-trend '+trendCls+'">'+trendTxt+'</div>'
+      +sparkSvg
+      +'</div>';
+  }).join('');
+}
+
+function renderECAlertas(pac){
+  var elWrap=document.getElementById('ecAlertas');
+  var el=document.getElementById('ecAlertasList');
+  if(!el||!elWrap)return;
+  var ids=S.pacs.filter(function(p){return p.nome===pac;}).map(function(p){return p.id;});
+  var meds=S.meds.filter(function(m){return ids.includes(m.paciente_id);});
+  var alertas=[];
+  // Alerta: perda de peso > 5% nos últimos 90 dias
+  var pesos=meds.filter(function(m){return m.parametro==='Peso';}).sort(function(a,b){return new Date(a.data_hora)-new Date(b.data_hora);});
+  if(pesos.length>=2){
+    var cut=new Date(Date.now()-90*864e5);
+    var recentes=pesos.filter(function(m){return new Date(m.data_hora)>=cut;});
+    if(recentes.length>=2){
+      var ini=parseFloat(recentes[0].valor),fim=parseFloat(recentes[recentes.length-1].valor);
+      var pct=((ini-fim)/ini)*100;
+      if(pct>=5)alertas.push({cls:'danger',ic:'⚠️',txt:'Perda de peso significativa',sub:(pct.toFixed(1)+'% em 90 dias ('+ini+'→'+fim+' kg)')});
+      else if(pct>=3)alertas.push({cls:'warn',ic:'📉',txt:'Perda de peso moderada',sub:(pct.toFixed(1)+'% em 90 dias')});
+    }
+  }
+  // Alerta: febre recorrente (temp > 37.8 em 2+ registros no último mês)
+  var cut30=new Date(Date.now()-30*864e5);
+  var febres=meds.filter(function(m){return m.parametro==='Temperatura'&&parseFloat(m.valor)>37.8&&new Date(m.data_hora)>=cut30;});
+  if(febres.length>=2)alertas.push({cls:'danger',ic:'🌡️',txt:'Febre recorrente',sub:(febres.length+' registros >37.8°C no último mês')});
+  // Alerta: tendência de alta em marcadores (últimas 3 medições subindo)
+  var params=[...new Set(meds.map(function(m){return m.parametro;}))];
+  params.forEach(function(p){
+    var s=meds.filter(function(m){return m.parametro===p;}).sort(function(a,b){return new Date(a.data_hora)-new Date(b.data_hora);});
+    if(s.length>=3){
+      var last3=s.slice(-3).map(function(m){return parseFloat(m.valor);});
+      if(last3[0]<last3[1]&&last3[1]<last3[2]&&!['Peso','Temperatura','Pressão sistólica','Pressão diastólica'].includes(p)){
+        var pct2=((last3[2]-last3[0])/Math.abs(last3[0]||1))*100;
+        if(pct2>20)alertas.push({cls:'warn',ic:'📈',txt:'Tendência de alta: '+p,sub:('Últimas 3 medições crescentes (+'+pct2.toFixed(0)+'%)')});
+      }
+    }
+  });
+  if(!alertas.length){elWrap.style.display='none';return;}
+  elWrap.style.display='block';
+  el.innerHTML=alertas.map(function(a){
+    return '<div class="alerta-item"><div class="alerta-ic '+a.cls+'">'+a.ic+'</div><div><div class="alerta-txt">'+a.txt+'</div><div class="alerta-sub">'+a.sub+'</div></div></div>';
+  }).join('');
+}
+
+function renderECTrt(pac){
+  var el=document.getElementById('ecTrt');
+  var card=document.getElementById('ecTrtCard');
+  if(!el||!card)return;
+  var ids=S.pacs.filter(function(p){return p.nome===pac;}).map(function(p){return p.id;});
+  var trts=(S.trts||[]).filter(function(t){return ids.includes(t.paciente_id)&&t.status==='Em andamento';}).sort(function(a,b){return new Date(b.data_inicio)-new Date(a.data_inicio);});
+  if(!trts.length){el.style.display='none';return;}
+  el.style.display='block';
+  card.innerHTML=trts.map(function(t){
+    var chips='';
+    if(t.data_inicio)chips+='<span class="trt-chip">Início: '+fmtD(t.data_inicio)+'</span>';
+    if(t.ciclo)chips+='<span class="trt-chip">Ciclo '+t.ciclo+'</span>';
+    if(t.sessoes_realizadas&&t.total_sessoes)chips+='<span class="trt-chip">Sessão '+t.sessoes_realizadas+'/'+t.total_sessoes+'</span>';
+    if(t.dia_sessao)chips+='<span class="trt-chip">Próxima: '+fmtD(t.dia_sessao)+'</span>';
+    if(t.local)chips+='<span class="trt-chip">📍 '+esc(t.local)+'</span>';
+    return '<div style="margin-bottom:10px"><div class="trt-nome">'+esc(t.tipo||'Tratamento')+'</div>'+(t.observacoes?'<div style="font-size:12px;color:var(--n70);margin-bottom:6px">'+esc(t.observacoes)+'</div>':'')+'<div class="trt-chips">'+chips+'</div></div>';
+  }).join('<hr style="border:none;border-top:1px solid var(--n06);margin:10px 0">');
+}
+/* ══════════════════════════════════════════ */
 function renderMeds(){const ids=fIds();const list=S.meds.filter(m=>ids.includes(m.paciente_id));const el=document.getElementById('liM');if(!el)return;if(!list.length){el.innerHTML=emS('📊','Sem medições','');return;}el.innerHTML=list.slice(0,30).map(m=>`<div class="lr"><div class="lr-ic" style="background:var(--pl)">📊</div><div class="lr-b"><div class="lr-t">${m.parametro}: <strong>${m.valor} ${m.unidade||''}</strong></div><div class="lr-m">${chPac(gPN(m.paciente_id))} <span>📅 ${fmtDT(m.data_hora)}</span>${m.observacoes?`<span>${m.observacoes}</span>`:''}</div>${byL(m.cadastrado_por)}</div><div class="lr-a"><button class="btn btn-xs btn-d" onclick="del('medicoes','${m.id}',loadAll,()=>{renderCharts();renderMeds();})">✕</button></div></div>`).join('');}
 
 /* ANOTAÇÕES */
@@ -1153,39 +1407,53 @@ async function handlePDF(input){
   document.getElementById('pdfSt').style.display='flex';
   document.getElementById('pdfPrev').style.display='none';
   document.getElementById('pdfSaveBtn').style.display='none';
-  const b64=await f2b64(file);
-  const mediaType=file.type;
   try{
-    const msgContent=isPDF
-      ?[{type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}},{type:'text',text:'Extraia as informações deste laudo médico.'}]
-      :[{type:'image',source:{type:'base64',media_type:mediaType,data:b64}},{type:'text',text:'Extraia as informações deste laudo médico.'}];
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-beta':'pdfs-2024-09-25','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-5-20251001',
-        max_tokens:2000,
-        system:'Você é um assistente médico. Extraia informações de laudos. Responda SOMENTE com JSON válido, sem texto extra, sem markdown: {"tipo":"nome do exame","data":"YYYY-MM-DD ou null","local":"laboratório ou null","resultado":"texto completo do resultado","interpretacao":"resumo clínico objetivo em 2-3 frases"}',
-        messages:[{role:'user',content:msgContent}]
-      })
-    });
-    if(!res.ok){const err=await res.text();throw new Error(err);}
-    const data=await res.json();
-    const raw=data.content?.find(b=>b.type==='text')?.text||'{}';
-    const clean=raw.replace(/```json|```/g,'').trim();
-    const parsed=JSON.parse(clean);
-    document.getElementById('pTipo').value=parsed.tipo||'';
-    document.getElementById('pDt').value=parsed.data||'';
-    document.getElementById('pLoc').value=parsed.local||'';
-    document.getElementById('pRes').value=parsed.resultado||'';
-    document.getElementById('pInterp').value=parsed.interpretacao||'';
+    var rawText='';
+    if(isPDF){
+      if(!window.pdfjsLib){
+        await new Promise(function(resolve,reject){
+          var s=document.createElement('script');
+          s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+          s.onload=resolve;s.onerror=reject;document.head.appendChild(s);
+        });
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+      const ab=await file.arrayBuffer();
+      const pdf=await window.pdfjsLib.getDocument({data:ab}).promise;
+      for(var p=1;p<=pdf.numPages;p++){
+        const page=await pdf.getPage(p);
+        const tc=await page.getTextContent();
+        rawText+=tc.items.map(function(i){return i.str;}).join(' ')+'\n';
+      }
+    } else {
+      rawText='[Imagem — preencha os campos manualmente]';
+    }
+    var parsed={tipo:'',data:'',local:'',resultado:''};
+    var mTipo=rawText.match(/(?:exame[:\s]+|resultado[:\s]+|laudo[:\s]+)([^\n\r]{3,60})/i)||rawText.match(/^([A-Z\u00C0-\u00FF][^\n\r]{3,50})(?:\n|\r)/m);
+    if(mTipo)parsed.tipo=mTipo[1].trim();
+    var mData=rawText.match(/\b(\d{2})[\/\-](\d{2})[\/\-](\d{4})\b/)||rawText.match(/\b(\d{4})[\/\-](\d{2})[\/\-](\d{2})\b/);
+    if(mData){if(mData[1].length===4)parsed.data=mData[1]+'-'+mData[2]+'-'+mData[3];else parsed.data=mData[3]+'-'+mData[2]+'-'+mData[1];}
+    var mLoc=rawText.match(/(?:laborat[o\u00f3]rio|lab\.?|cl[i\u00ed]nica|hospital|unidade)[:\s]*([^\n\r]{3,60})/i);
+    if(mLoc)parsed.local=mLoc[1].trim();
+    var mRes=rawText.match(/(?:resultado|conclus[a\u00e3]o|laudo)[:\s]*([^\n\r]{10,}(?:\n[^\n\r]{0,}){0,10})/i);
+    if(mRes)parsed.resultado=mRes[1].trim().substring(0,600);else parsed.resultado=rawText.substring(0,600);
+    document.getElementById('pTipo').value=parsed.tipo;
+    document.getElementById('pDt').value=parsed.data;
+    document.getElementById('pLoc').value=parsed.local;
+    document.getElementById('pRes').value=parsed.resultado;
+    document.getElementById('pInterp').value=rawText.substring(0,1200);
     document.getElementById('pdfSt').style.display='none';
     document.getElementById('pdfPrev').style.display='block';
     document.getElementById('pdfSaveBtn').style.display='inline-flex';
   }catch(e){
-    console.error('PDF IA error:',e);
+    console.error('PDF error:',e);
     document.getElementById('pdfSt').style.display='none';
-    toast('Erro ao processar com IA. Tente preencher manualmente.','error');
+    document.getElementById('pTipo').value='';document.getElementById('pDt').value='';
+    document.getElementById('pLoc').value='';document.getElementById('pRes').value='';
+    document.getElementById('pInterp').value='Nao foi possivel extrair o texto. Preencha manualmente.';
+    document.getElementById('pdfPrev').style.display='block';
+    document.getElementById('pdfSaveBtn').style.display='inline-flex';
+    toast('Texto extraido parcialmente — revise os campos','warn');
   }
 }
 async function savePDFRes(){const d={paciente_id:gPId(document.getElementById('pdfPac').value),tipo:document.getElementById('pTipo').value,data_realizada:document.getElementById('pDt').value||null,local:document.getElementById('pLoc').value,resultado:document.getElementById('pRes').value,observacoes:document.getElementById('pInterp').value,status:'Realizado',cadastrado_por:S.uName};const{error}=await db.from('exames').insert(d);if(error){toast('Erro: '+error.message,'error');return;}toast('Importado!','ok');closeM('pdfimport');await loadAll();renderRes();renderExames();}
