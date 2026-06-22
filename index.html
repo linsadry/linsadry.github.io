@@ -470,7 +470,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
           <input type="text" class="si" id="sInp" placeholder="Buscar..." oninput="doSearch(this.value)">
           <div class="sdrop" id="sDrop"></div>
         </div>
-        <button class="ibtn" onclick="checkNotifs()">🔔<div class="ndot" id="nDot" style="display:none"></div></button>
+        <button class="ibtn" onclick="openAlertasPanel()">🔔<div class="ndot" id="nDot" style="display:none"></div></button>
         <button class="ibtn" onclick="reloadApp()" title="Atualizar dados" style="font-size:16px">🔄</button>
       </div>
     </header>
@@ -478,7 +478,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
     <div class="page on" id="page-dashboard">
       <div id="alertBanner"></div>
       <div class="sg">
-        <div class="sc" style="cursor:pointer" onclick="navTo('consultas')"><div class="sc-blob" style="background:var(--p)"></div><div class="sc-ic" style="background:var(--pl)">🗓</div><div class="sc-num" id="stC">—</div><div class="sc-lbl">Consultas este mês</div></div>
+        <div class="sc" style="cursor:pointer" onclick="openMesPopup()"><div class="sc-blob" style="background:var(--p)"></div><div class="sc-ic" style="background:var(--pl)">🗓</div><div class="sc-num" id="stC">—</div><div class="sc-lbl">Consultas este mês</div></div>
         <div class="sc" style="cursor:pointer" onclick="navTo('tratamentos')"><div class="sc-blob" style="background:#9b59b6"></div><div class="sc-ic" style="background:rgba(155,89,182,0.13)">💉</div><div class="sc-num" id="stT">—</div><div class="sc-lbl">Tratamentos este mês</div></div>
         <div class="sc" style="cursor:pointer" onclick="navTo('exames')"><div class="sc-blob" style="background:var(--s)"></div><div class="sc-ic" style="background:var(--sl)">🔬</div><div class="sc-num" id="stE">—</div><div class="sc-lbl">Exames pendentes</div></div>
         <div class="sc" style="cursor:pointer" onclick="openSemanaPopup()"><div class="sc-blob" style="background:var(--a)"></div><div class="sc-ic" style="background:var(--al)">⏳</div><div class="sc-num" id="stW">—</div><div class="sc-lbl">Esta semana</div></div>
@@ -666,6 +666,8 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
 <div class="tstack" id="toasts"></div>
 <div class="bk" id="m-dayview"><div class="mb"><div class="mh"><div class="mt" id="dayviewTitle">Eventos do dia</div><button class="mx" onclick="closeM('dayview')">✕</button></div><div class="mbody"><div id="dayviewContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('dayview')">Fechar</button></div></div></div>
 <div class="bk" id="m-semana"><div class="mb"><div class="mh"><div class="mt">📅 Esta semana</div><button class="mx" onclick="closeM('semana')">✕</button></div><div class="mbody"><div id="semanaContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('semana')">Fechar</button></div></div></div>
+<div class="bk" id="m-mes"><div class="mb"><div class="mh"><div class="mt" id="mesMTitle">Consultas do mês</div><button class="mx" onclick="closeM('mes')">✕</button></div><div class="mbody"><div id="mesContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('mes')">Fechar</button></div></div></div>
+<div class="bk" id="m-alertas"><div class="mb"><div class="mh"><div class="mt">🔔 Alertas e lembretes</div><button class="mx" onclick="closeM('alertas')">✕</button></div><div class="mbody"><div id="alertasContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('alertas')">Fechar</button></div></div></div>
 <div class="bk" id="m-lembretes"><div class="mb"><div class="mh"><div class="mt">Lembretes</div><button class="mx" onclick="closeM('lembretes')">✕</button></div><div class="mbody"><div id="lembretesContent"></div></div><div class="mft"><button class="btn btn-p btn-sm" onclick="closeM('lembretes')">Ok</button></div></div></div>
 <div class="bk" id="m-vercons"><div class="mb"><div class="mh"><div class="mt">Detalhes da Consulta</div><button class="mx" onclick="closeM('vercons')">✕</button></div><div class="mbody"><div id="verConsContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('vercons')">Fechar</button><a class="btn btn-s btn-sm" id="verConsGcBtn" href="#" target="_blank" style="display:none">📅 Google Calendar</a><button class="btn btn-p btn-sm" id="verConsEditBtn">✏ Editar</button></div></div></div>
 
@@ -2081,6 +2083,62 @@ saveCons = async function(){
 
 /* ══ RENDERTI — movido para bloco TIMELINE acima ══ */
 
+/* ══ MÊS POPUP ══ */
+function openMesPopup(){
+  var ids=fIds();var now=new Date();
+  var meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var cons=S.cons.filter(function(c){
+    if(!ids.includes(c.paciente_id)||!c.data_hora)return false;
+    var d=new Date(c.data_hora);
+    return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
+  }).sort(function(a,b){return new Date(a.data_hora)-new Date(b.data_hora);});
+  document.getElementById('mesMTitle').textContent='🗓 '+meses[now.getMonth()]+' '+now.getFullYear();
+  var el=document.getElementById('mesContent');
+  if(!cons.length){el.innerHTML=emS('🗓','Nenhuma consulta este mês','');openM('mes');return;}
+  el.innerHTML=cons.map(function(c){
+    var d=new Date(c.data_hora);
+    var past=d<now;
+    return'<div class="lr" style="padding:9px 0;border-bottom:1px solid var(--n06);opacity:'+(past?'.65':'1')+'">'
+      +'<div class="lr-ic" style="background:var(--pl);font-size:14px;width:32px;height:32px">🩺</div>'
+      +'<div class="lr-b"><div class="lr-t" style="font-size:13px"><span style="font-weight:600;color:var(--n)">'+fmtDT(c.data_hora)+'</span> · '+esc(c.especialidade||'Consulta')+'</div>'
+      +'<div class="lr-m">'+chPac(gPN(c.paciente_id))+(c.profissional?' <span>Dr(a). '+esc(c.profissional)+'</span>':'')+(c.local?' <span>📍 '+esc(c.local)+'</span>':'')+' '+chSt(c.status)+'</div></div></div>';
+  }).join('');
+  openM('mes');
+}
+
+/* ══ ALERTAS PANEL ══ */
+function openAlertasPanel(){
+  var ids=fIds();var now=new Date();
+  var alertas=[];
+  // Próximos 7 dias
+  var semFim=new Date(now.getTime()+7*864e5);
+  var proxCons=S.cons.filter(function(c){var d=new Date(c.data_hora);return ids.includes(c.paciente_id)&&c.status!=='Realizada'&&d>=now&&d<=semFim;});
+  if(proxCons.length)alertas.push({ic:'🩺',cls:'warn',txt:proxCons.length+' consulta(s) nos próximos 7 dias',sub:proxCons.map(function(c){return fmtDT(c.data_hora)+' — '+(c.especialidade||'Consulta');}).join(' / ')});
+  // Exames atrasados
+  var exAt=S.exs.filter(function(e){return ids.includes(e.paciente_id)&&e.status==='A fazer'&&e.data_agendada&&new Date(e.data_agendada+'T23:59:59')<now;});
+  if(exAt.length)alertas.push({ic:'🔬',cls:'danger',txt:exAt.length+' exame(s) com data vencida',sub:exAt.map(function(e){return(e.tipo||'Exame')+' — '+fmtD(e.data_agendada);}).join(' / ')});
+  // Pendências vencidas
+  var pendAt=(S.pends||[]).filter(function(p){return ids.includes(p.paciente_id)&&!p.feita&&p.data_alvo&&new Date(p.data_alvo+'T23:59:59')<now;});
+  if(pendAt.length)alertas.push({ic:'✅',cls:'warn',txt:pendAt.length+' pendência(s) vencida(s)',sub:pendAt.map(function(p){return p.texto;}).slice(0,2).join(' / ')});
+  // Febre recente (evento clínico grave)
+  var cutW=new Date(now.getTime()-7*864e5);
+  var evtGrave=(S.evts||[]).filter(function(e){return ids.includes(e.paciente_id)&&e.severidade==='grave'&&new Date(e.data_hora)>=cutW;});
+  if(evtGrave.length)alertas.push({ic:'⚠️',cls:'danger',txt:evtGrave.length+' evento(s) grave(s) na última semana',sub:evtGrave.map(function(e){return e.tipo+': '+e.descricao;}).slice(0,2).join(' / ')});
+  // Consulta há muito tempo
+  var ultCons=S.cons.filter(function(c){return ids.includes(c.paciente_id)&&c.status==='Realizada';}).sort(function(a,b){return new Date(b.data_hora)-new Date(a.data_hora);})[0];
+  if(ultCons&&new Date(now-120*864e5)>new Date(ultCons.data_hora))alertas.push({ic:'📅',cls:'warn',txt:'Última consulta há mais de 4 meses',sub:'Última: '+fmtDT(ultCons.data_hora)});
+  var el=document.getElementById('alertasContent');
+  if(!alertas.length){
+    el.innerHTML='<div style="text-align:center;padding:24px 0"><div style="font-size:32px;margin-bottom:8px">✅</div><div style="font-size:14px;color:var(--n)">Tudo em dia</div><div style="font-size:12px;color:var(--n70);margin-top:4px">Nenhum alerta ativo</div></div>';
+    document.getElementById('nDot').style.display='none';
+  } else {
+    el.innerHTML=alertas.map(function(a){
+      return'<div class="alerta-item"><div class="alerta-ic '+a.cls+'">'+a.ic+'</div><div><div class="alerta-txt">'+a.txt+'</div><div class="alerta-sub">'+a.sub+'</div></div></div>';
+    }).join('');
+    document.getElementById('nDot').style.display='block';
+  }
+  openM('alertas');
+}
 /* ══ SEMANA POPUP ══ */
 function openSemanaPopup(){
   var ids=fIds();
