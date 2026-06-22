@@ -228,7 +228,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
 .ec-status.atencao{background:rgba(254,200,104,0.2);color:#9a7a00;}
 .ec-status.alerta{background:rgba(224,123,106,0.15);color:#c0392b;}
 .ec-diag{font-family:var(--fd);font-size:20px;font-weight:500;color:var(--n);margin:10px 0 4px;}
-.ec-resumo-txt{font-size:13px;color:var(--n70);line-height:1.55;margin-top:10px;padding:10px 14px;background:var(--card2);border-radius:var(--rmd);border-left:3px solid var(--p);}
+.ec-resumo-txt{font-size:13px;color:var(--n70);line-height:1.55;margin-top:10px;padding:10px 14px;background:var(--card2);border-radius:0 var(--rmd) var(--rmd) 0;border-left:3px solid var(--p);}
 .ec-meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;}
 .ec-meta-item{font-size:12px;color:var(--n70);}
 .ec-meta-item strong{color:var(--n);font-weight:600;}
@@ -481,7 +481,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
         <div class="sc" style="cursor:pointer" onclick="navTo('consultas')"><div class="sc-blob" style="background:var(--p)"></div><div class="sc-ic" style="background:var(--pl)">🗓</div><div class="sc-num" id="stC">—</div><div class="sc-lbl">Consultas este mês</div></div>
         <div class="sc" style="cursor:pointer" onclick="navTo('tratamentos')"><div class="sc-blob" style="background:#9b59b6"></div><div class="sc-ic" style="background:rgba(155,89,182,0.13)">💉</div><div class="sc-num" id="stT">—</div><div class="sc-lbl">Tratamentos este mês</div></div>
         <div class="sc" style="cursor:pointer" onclick="navTo('exames')"><div class="sc-blob" style="background:var(--s)"></div><div class="sc-ic" style="background:var(--sl)">🔬</div><div class="sc-num" id="stE">—</div><div class="sc-lbl">Exames pendentes</div></div>
-        <div class="sc" style="cursor:pointer" onclick="navTo('consultas')"><div class="sc-blob" style="background:var(--a)"></div><div class="sc-ic" style="background:var(--al)">⏳</div><div class="sc-num" id="stW">—</div><div class="sc-lbl">Esta semana</div></div>
+        <div class="sc" style="cursor:pointer" onclick="openSemanaPopup()"><div class="sc-blob" style="background:var(--a)"></div><div class="sc-ic" style="background:var(--al)">⏳</div><div class="sc-num" id="stW">—</div><div class="sc-lbl">Esta semana</div></div>
         <div class="sc" style="cursor:pointer" onclick="navTo('pendencias')"><div class="sc-blob" style="background:var(--p)"></div><div class="sc-ic" style="background:var(--pl)">☑</div><div class="sc-num" id="stPend">—</div><div class="sc-lbl">Pendências abertas</div></div>
         <div class="sc" style="cursor:pointer" onclick="navTo('anotacoes')"><div class="sc-blob" style="background:var(--s)"></div><div class="sc-ic" style="background:var(--sl)">✍</div><div class="sc-num" id="stA">—</div><div class="sc-lbl">Anotações da semana</div></div>
       </div>
@@ -665,6 +665,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
 <div class="bk" id="m-pendencia"><div class="mb"><div class="mh"><div class="mt" id="ttlPend">Nova Pendência</div><button class="mx" onclick="closeM('pendencia')">✕</button></div><div class="mbody"><input type="hidden" id="pendId"><div class="fr"><div class="ff"><label class="fl">Paciente</label><select class="fc" id="pendPac"></select></div><div class="ff"><label class="fl">Categoria</label><select class="fc" id="pendCat"><option value="Levar documento">📄 Levar documento</option><option value="Comprar">🛒 Comprar</option><option value="Ligar">📞 Ligar</option><option value="Perguntar ao médico">❓ Perguntar ao médico</option><option value="Fazer exame">🔬 Fazer exame</option><option value="Outro">📌 Outro</option></select></div></div><div class="ff"><label class="fl">Descrição *</label><textarea class="fc" id="pendTxt" style="min-height:80px" placeholder="Ex: Levar resultado do hemograma, perguntar sobre ajuste da dose de Losartana..."></textarea></div><div class="fr"><div class="ff"><label class="fl">Antes de (data)</label><input type="date" class="fc" id="pendData"></div><div class="ff"><label class="fl">Consulta relacionada</label><select class="fc" id="pendCons"><option value="">Nenhuma</option></select></div></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('pendencia')">Cancelar</button><button class="btn btn-p btn-sm" onclick="savePend()">Salvar</button></div></div></div>
 <div class="tstack" id="toasts"></div>
 <div class="bk" id="m-dayview"><div class="mb"><div class="mh"><div class="mt" id="dayviewTitle">Eventos do dia</div><button class="mx" onclick="closeM('dayview')">✕</button></div><div class="mbody"><div id="dayviewContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('dayview')">Fechar</button></div></div></div>
+<div class="bk" id="m-semana"><div class="mb"><div class="mh"><div class="mt">📅 Esta semana</div><button class="mx" onclick="closeM('semana')">✕</button></div><div class="mbody"><div id="semanaContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('semana')">Fechar</button></div></div></div>
 <div class="bk" id="m-lembretes"><div class="mb"><div class="mh"><div class="mt">Lembretes</div><button class="mx" onclick="closeM('lembretes')">✕</button></div><div class="mbody"><div id="lembretesContent"></div></div><div class="mft"><button class="btn btn-p btn-sm" onclick="closeM('lembretes')">Ok</button></div></div></div>
 <div class="bk" id="m-vercons"><div class="mb"><div class="mh"><div class="mt">Detalhes da Consulta</div><button class="mx" onclick="closeM('vercons')">✕</button></div><div class="mbody"><div id="verConsContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('vercons')">Fechar</button><a class="btn btn-s btn-sm" id="verConsGcBtn" href="#" target="_blank" style="display:none">📅 Google Calendar</a><button class="btn btn-p btn-sm" id="verConsEditBtn">✏ Editar</button></div></div></div>
 
@@ -1212,8 +1213,10 @@ function calcStatusInteligente(pac,p){
   if(ultCons&&new Date(Date.now()-120*864e5)>new Date(ultCons.data_hora))alertas.push('Sem consulta há mais de 4 meses');
   // Status
   var manualSt=p?p.status_clinico:'estavel';
-  var autoSt=alertas.length>=2?'alerta':alertas.length===1?'atencao':'estavel';
-  var st=manualSt==='alerta'?'alerta':autoSt;
+  var autoSt=alertas.length>=2?'alerta':alertas.length>=1?'atencao':'estavel';
+  // Manual sempre prevalece; auto só escala para cima se não houver override
+  var stRank={estavel:0,atencao:1,alerta:2};
+  var st=stRank[manualSt]>=stRank[autoSt]?manualSt:autoSt;
   var stLabel={estavel:'🟢 Estável',atencao:'🟡 Necessita atenção',alerta:'🔴 Alerta clínico'};
   // Custom status override
   if(p&&p.estagio_atual){stLabel.estavel='🟢 '+p.estagio_atual;stLabel.atencao='🟡 '+p.estagio_atual;stLabel.alerta='🔴 '+p.estagio_atual;}
@@ -2078,6 +2081,62 @@ saveCons = async function(){
 
 /* ══ RENDERTI — movido para bloco TIMELINE acima ══ */
 
+/* ══ SEMANA POPUP ══ */
+function openSemanaPopup(){
+  var ids=fIds();
+  var now=new Date();
+  var semIni=new Date(now);semIni.setHours(0,0,0,0);
+  var semFim=new Date(semIni.getTime()+7*864e5);
+  var dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  var meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  // Coletar todos os eventos da semana
+  var evts=[];
+  (S.cons||[]).forEach(function(c){
+    if(!ids.includes(c.paciente_id)||!c.data_hora)return;
+    var d=new Date(c.data_hora);
+    if(d>=semIni&&d<semFim)evts.push({data:d,tipo:'consulta',ic:'🩺',color:'var(--p)',lbl:c.especialidade||'Consulta',sub:(c.profissional?'Dr(a). '+c.profissional:'')+(c.local?' · '+c.local:''),pac:gPN(c.paciente_id),st:c.status});
+  });
+  (S.exs||[]).forEach(function(e){
+    if(!ids.includes(e.paciente_id))return;
+    var dateStr=e.data_agendada||e.data_realizada;if(!dateStr)return;
+    var d=new Date(dateStr+'T08:00:00');
+    if(d>=semIni&&d<semFim)evts.push({data:d,tipo:'exame',ic:'🔬',color:'var(--s)',lbl:e.tipo||'Exame',sub:e.local||'',pac:gPN(e.paciente_id),st:e.status});
+  });
+  (S.trts||[]).forEach(function(t){
+    if(!ids.includes(t.paciente_id)||!t.data_inicio)return;
+    var d=new Date(t.data_inicio);
+    if(d>=semIni&&d<semFim)evts.push({data:d,tipo:'tratamento',ic:'💉',color:'#9b59b6',lbl:t.tipo||'Tratamento',sub:(t.ciclo?'Ciclo '+t.ciclo:'')+(t.local?' · '+t.local:''),pac:gPN(t.paciente_id),st:t.status});
+  });
+  evts.sort(function(a,b){return a.data-b.data;});
+  var el=document.getElementById('semanaContent');
+  if(!el)return;
+  if(!evts.length){el.innerHTML=emS('📅','Nenhum evento nos próximos 7 dias','');openM('semana');return;}
+  // Agrupar por dia
+  var byDay={};
+  evts.forEach(function(e){
+    var k=e.data.toDateString();
+    if(!byDay[k])byDay[k]={date:e.data,items:[]};
+    byDay[k].items.push(e);
+  });
+  var html='';
+  Object.values(byDay).forEach(function(g){
+    var d=g.date;
+    var isToday=d.toDateString()===now.toDateString();
+    html+='<div style="margin-bottom:14px">';
+    html+='<div style="font-size:11px;font-weight:700;color:'+(isToday?'var(--p)':'var(--n40)')+';letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">';
+    html+=dias[d.getDay()]+', '+d.getDate()+' de '+meses[d.getMonth()]+(isToday?' · Hoje':'')+'</div>';
+    g.items.forEach(function(e){
+      var hora=e.data.getHours()?('<span style="font-weight:600;color:var(--n)">'+('0'+e.data.getHours()).slice(-2)+':'+('0'+e.data.getMinutes()).slice(-2)+'</span> · '):'';
+      html+='<div class="lr" style="padding:8px 0;border-bottom:1px solid var(--n06)">';
+      html+='<div class="lr-ic" style="background:'+e.color+'20;font-size:14px;width:32px;height:32px">'+e.ic+'</div>';
+      html+='<div class="lr-b"><div class="lr-t" style="font-size:13px">'+hora+esc(e.lbl)+'</div>';
+      html+='<div class="lr-m">'+chPac(e.pac)+(e.sub?' <span>'+esc(e.sub)+'</span>':'')+chSt(e.st)+'</div></div></div>';
+    });
+    html+='</div>';
+  });
+  el.innerHTML=html;
+  openM('semana');
+}
 /* ══ CALENDÁRIO - openDay ══ */
 function calToday(){S.calY=new Date().getFullYear();S.calM=new Date().getMonth();renderCal();}
 function openDay(y,m,d){
