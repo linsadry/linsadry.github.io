@@ -265,6 +265,16 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
 .traj-seq strong{color:var(--n);}
 .traj-badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;margin-top:2px;}
 .traj-badge.melhor{color:#5a7a28;} .traj-badge.piora{color:#c0392b;} .traj-badge.estavel{color:var(--n40);}
+.painel-tipo{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.painel-tipo-btn{padding:6px 14px;border-radius:var(--rf);border:1px solid var(--n15);background:var(--card2);font-size:12px;cursor:pointer;color:var(--n70);font-family:var(--fb);}
+.painel-tipo-btn.on{background:var(--p);color:#fff;border-color:var(--p);}
+.res-campos{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:12px 0;}
+.res-campo{display:flex;flex-direction:column;gap:4px;}
+.res-campo label{font-size:11px;font-weight:600;color:var(--n40);text-transform:uppercase;letter-spacing:.04em;}
+.res-campo input{padding:7px 10px;border:1px solid var(--n15);border-radius:var(--rsm);font-size:13px;background:var(--card2);color:var(--n);font-family:var(--fb);}
+.res-campo input:focus{outline:none;border-color:var(--p);}
+.fav-star{background:none;border:none;font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;}
+.res-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 8px;border-radius:var(--rf);background:rgba(171,194,112,0.15);color:#5a7a28;font-weight:600;}
 .evt-entry{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--n06);}
 .evt-entry:last-child{border-bottom:none;}
 .evt-ic{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
@@ -425,24 +435,25 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
     <nav class="sb-nav">
       <div class="sb-sec">Início</div>
       <div class="sb-it on" onclick="navTo('dashboard')"><span class="sb-ic">⊞</span>Dashboard</div>
+      <div class="sb-sec">Clínico</div>
+      <div class="sb-it" onclick="navTo('saude')"><span class="sb-ic">📈</span>Evolução Clínica</div>
       <div class="sb-it" onclick="navTo('consultas')"><span class="sb-ic">🩺</span>Consultas</div>
       <div class="sb-it" onclick="navTo('exames')"><span class="sb-ic">🔬</span>Exames</div>
       <div class="sb-it" onclick="navTo('tratamentos')"><span class="sb-ic">💉</span>Tratamentos</div>
-      <div class="sb-it" onclick="navTo('profissionais')"><span class="sb-ic">👨‍⚕️</span>Profissionais</div>
-      <div class="sb-it" onclick="navTo('saude')"><span class="sb-ic">📈</span>Evolução Clínica</div>
-      <div class="sb-it" onclick="navTo('pendencias')"><span class="sb-ic">☑</span>Pendências</div>
+      <div class="sb-it" onclick="navTo('timeline')"><span class="sb-ic">◎</span>Linha do Tempo</div>
+      <div class="sb-sec">Registros</div>
       <div class="sb-it" onclick="navTo('anotacoes')"><span class="sb-ic">✍</span>Anotações</div>
+      <div class="sb-it" onclick="navTo('pendencias')"><span class="sb-ic">☑</span>Pendências</div>
+      <div class="sb-sec">Pessoas</div>
+      <div class="sb-it" onclick="navTo('profissionais')"><span class="sb-ic">👨‍⚕️</span>Profissionais</div>
+      <div class="sb-it" onclick="navTo('cuidadores')"><span class="sb-ic">👤</span>Cuidadores</div>
       <div class="sb-sec">Pacientes</div>
       <div id="sbPatLinks"></div>
       <div class="sb-it sb-sub" onclick="openAddPac()"><span class="sb-ic">＋</span>Adicionar paciente</div>
-      <div class="sb-sec">Cuidado</div>
-      <div class="sb-it" onclick="navTo('cuidadores')"><span class="sb-ic">👤</span>Cuidadores</div>
+      <div class="sb-sec">Dados</div>
+      <div class="sb-it" onclick="navTo('acessos')"><span class="sb-ic">🔐</span>Acessos & Logins</div>
       <div class="sb-it" onclick="navTo('plantoes')"><span class="sb-ic">📅</span>Escala de Plantões</div>
       <div class="sb-it" onclick="navTo('financeiro')"><span class="sb-ic">💰</span>Financeiro</div>
-      <div class="sb-sec">Dados</div>
-      <div class="sb-it" onclick="navTo('resultados')"><span class="sb-ic">📄</span>Resultados</div>
-      <div class="sb-it" onclick="navTo('acessos')"><span class="sb-ic">🔐</span>Acessos & Logins</div>
-      <div class="sb-it" onclick="navTo('timeline')"><span class="sb-ic">◎</span>Linha do Tempo</div>
       <div class="sb-sec">Sistema</div>
       <div class="sb-it" onclick="navTo('config')"><span class="sb-ic">⚙</span>Configurações</div>
     </nav>
@@ -501,7 +512,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
 
     <div class="page" id="page-consultas"><div class="sh"><div></div><div style="display:flex;gap:7px;align-items:center"><select class="fc" style="width:auto;padding:6px 11px;font-size:12px" id="filtCS" onchange="renderConsultas()"><option value="">Todos</option><option value="Agendada">Agendadas</option><option value="Realizada">Realizadas</option><option value="Cancelada">Canceladas</option></select><button class="btn btn-s btn-sm" onclick="openM('pendencia');popPendCons()">☑ Pendência</button><button class="btn btn-p btn-sm" onclick="openM('consulta');document.getElementById('cId').value='';document.getElementById('ttlC').textContent='Nova Consulta';var _p=document.getElementById('cPac');setTimeout(function(){popConsDropdowns(_p?_p.value:'');var pi=document.getElementById('cProf');if(pi){pi.style.display='none';pi.value='';}var li=document.getElementById('cLoc');if(li){li.style.display='none';li.value='';}},50)">+ Nova consulta</button></div></div><div class="card"><div id="liC"><div class="lrow"><div class="spin"></div></div></div></div></div>
 
-    <div class="page" id="page-exames"><div class="sh"><div></div><button class="btn btn-p btn-sm" onclick="openM('exame')">+ Novo exame</button></div><div class="tbar"><button class="ti on" onclick="swExT('afazer',this)">A fazer</button><button class="ti" onclick="swExT('realizados',this)">Realizados</button></div><div class="card"><div id="liE"><div class="lrow"><div class="spin"></div></div></div></div></div>
+    <div class="page" id="page-exames"><div class="sh"><div></div><div style="display:flex;gap:7px"><button class="btn btn-s btn-sm" onclick="openPDF()">📄 Importar PDF</button><button class="btn btn-p btn-sm" onclick="openExameNovo()">+ Novo exame</button></div></div><div class="tbar"><button class="ti on" onclick="swExT('afazer',this)">A fazer</button><button class="ti" onclick="swExT('realizados',this)">Realizados</button><button class="ti" onclick="swExT('comresultado',this)">Com resultado</button></div><div class="card"><div id="liE"><div class="lrow"><div class="spin"></div></div></div></div></div>
 
     <div id="page-tratamentos" class="page"><div class="ph"><div><div class="pc">CLINICO</div><div class="pn">Tratamentos</div></div><button class="btn btn-p btn-sm" onclick="openM('tratamento');document.getElementById('tId').value='';document.getElementById('ttlTrt').textContent='Registrar Sessão';setTimeout(function(){var tp=document.getElementById('tPac');if(tp&&tp.value)popTrtHosps();},100)">+ Registrar sessão</button></div><div id="liTrt"></div></div>
 <div id="page-profissionais" class="page">
@@ -674,12 +685,26 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
 
 <!-- MODALS -->
 <div class="bk" id="m-consulta"><div class="mb"><div class="mh"><div class="mt" id="ttlC">Nova Consulta</div><button class="mx" onclick="closeM('consulta')">✕</button></div><div class="mbody"><input type="hidden" id="cId"><div class="fr"><div class="ff"><label class="fl">Paciente</label><select class="fc" id="cPac" onchange="popConsDropdowns(this.value)"></select></div><div class="ff"><label class="fl">Data e hora</label><input type="datetime-local" class="fc" id="cDt"></div></div><div class="fr"><div class="ff"><label class="fl">Especialidade *</label><input type="text" class="fc" id="cEsp" placeholder="Ex: Cardiologia"></div><div class="ff"><label class="fl">Profissional</label><select class="fc" id="cProfSel" onchange="var v=this.value,i=document.getElementById('cProf');if(v==='outro'){i.style.display='block';i.value='';}else{i.style.display='none';i.value=v;}"><option value="">Selecionar profissional...</option><option value="outro">✏️ Digitar outro</option></select><input type="text" class="fc" id="cProf" placeholder="Nome do profissional" style="display:none;margin-top:6px"></div><div class="ff"><label class="fl">Acompanhante</label><input type="text" class="fc" id="cAcomp" placeholder="Opcional"></div></div><div class="fr"><div class="ff"><label class="fl">Local / Hospital</label><select class="fc" id="cLocSel" onchange="var v=this.value,i=document.getElementById('cLoc');if(v==='outro'){i.style.display='block';i.value='';}else if(v){i.style.display='none';i.value=this.options[this.selectedIndex].text;}else{i.style.display='none';i.value='';}"><option value="">Selecionar hospital...</option><option value="outro">✏️ Digitar outro local</option></select><input type="text" class="fc" id="cLoc" placeholder="Nome do local" style="display:none;margin-top:6px"></div><div class="ff"><label class="fl">Status</label><select class="fc" id="cSt"><option value="Agendada">Agendada</option><option value="Realizada">Realizada</option><option value="Reagendada">Reagendada</option><option value="Cancelada">Cancelada</option></select></div></div><div class="ff"><label class="fl">Prioridade</label><select class="fc" id="cPri" style="width:50%"><option value="Media">Média</option><option value="Alta">Alta</option><option value="Baixa">Baixa</option></select></div><div class="ff"><label class="fl">Observações</label><textarea class="fc" id="cObs"></textarea></div><div class="ff"><label class="fl">Orientações médicas</label><textarea class="fc" id="cOri"></textarea></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('consulta')">Cancelar</button><button class="btn btn-p btn-sm" onclick="saveCons()">Salvar</button></div></div></div>
-<div class="bk" id="m-exame"><div class="mb"><div class="mh"><div class="mt" id="ttlE">Novo Exame</div><button class="mx" onclick="closeM('exame')">✕</button></div><div class="mbody"><input type="hidden" id="eId"><div class="fr"><div class="ff"><label class="fl">Paciente</label><select class="fc" id="ePac"></select></div><div class="ff"><label class="fl">Tipo *</label><input type="text" class="fc" id="eTipo"></div></div><div class="fr"><div class="ff"><label class="fl">Data agendada</label><input type="date" class="fc" id="eDtA"></div><div class="ff"><label class="fl">Data realizada</label><input type="date" class="fc" id="eDtR"></div></div><div class="fr"><div class="ff"><label class="fl">Local</label><input type="text" class="fc" id="eLoc"></div><div class="ff"><label class="fl">Status</label><select class="fc" id="eSt"><option value="A fazer">A fazer</option><option value="Realizado">Realizado</option></select></div></div><div class="ff"><label class="fl">Prioridade</label><select class="fc" id="ePri" style="width:50%"><option value="Media">Média</option><option value="Alta">Alta</option><option value="Baixa">Baixa</option></select></div><div class="ff"><label class="fl">Resultado</label><textarea class="fc" id="eRes"></textarea></div><div class="ff"><label class="fl">Acompanhante</label><input type="text" class="fc" id="eAcomp" placeholder="Opcional"></div><div class="ff"><label class="fl">Observações</label><textarea class="fc" id="eObs"></textarea></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('exame')">Cancelar</button><button class="btn btn-p btn-sm" onclick="saveEx()">Salvar</button></div></div></div>
+<div class="bk" id="m-exame"><div class="mb"><div class="mh"><div class="mt" id="ttlE">Novo Exame</div><button class="mx" onclick="closeM('exame')">✕</button></div><div class="mbody"><input type="hidden" id="eId"><div class="fr"><div class="ff"><label class="fl">Paciente</label><select class="fc" id="ePac"></select></div><div class="ff"><label class="fl">Tipo *</label><input type="text" class="fc" id="eTipo"></div></div><div class="fr"><div class="ff"><label class="fl">Data agendada</label><input type="date" class="fc" id="eDtA"></div><div class="ff"><label class="fl">Data realizada</label><input type="date" class="fc" id="eDtR"></div></div><div class="fr"><div class="ff"><label class="fl">Local</label><input type="text" class="fc" id="eLoc"></div><div class="ff"><label class="fl">Status</label><select class="fc" id="eSt"><option value="A fazer">A fazer</option><option value="Realizado">Realizado</option></select></div></div><div class="ff"><label class="fl">Prioridade</label><select class="fc" id="ePri" style="width:50%"><option value="Media">Média</option><option value="Alta">Alta</option><option value="Baixa">Baixa</option></select></div>
+<div class="ff"><label class="fl">Tipo de painel de resultados</label>
+<div class="painel-tipo" id="ePainelTipo">
+<button class="painel-tipo-btn on" onclick="swPainel(this,'livre')">Livre</button>
+<button class="painel-tipo-btn" onclick="swPainel(this,'hemograma')">Hemograma</button>
+<button class="painel-tipo-btn" onclick="swPainel(this,'funcao_renal')">Função Renal</button>
+<button class="painel-tipo-btn" onclick="swPainel(this,'lipidico')">Lipídico</button>
+<button class="painel-tipo-btn" onclick="swPainel(this,'mieloma')">Mieloma</button>
+<button class="painel-tipo-btn" onclick="swPainel(this,'oncologia')">Oncologia</button>
+</div></div>
+<input type="hidden" id="ePainelAtivo" value="livre">
+<div id="ePainelCampos" style="display:none"></div>
+<div class="ff" id="eResWrap"><label class="fl">Resultado / Laudo</label><textarea class="fc" id="eRes" rows="3"></textarea></div>
+<div class="ff"><label class="fl">Acompanhante</label><input type="text" class="fc" id="eAcomp" placeholder="Opcional"></div>
+<div class="ff"><label class="fl">Observações</label><textarea class="fc" id="eObs"></textarea></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('exame')">Cancelar</button><button class="btn btn-p btn-sm" onclick="saveEx()">Salvar</button></div></div></div>
 <div class="bk" id="m-medicao"><div class="mb"><div class="mh"><div class="mt">Registrar Medição</div><button class="mx" onclick="closeM('medicao')">✕</button></div><div class="mbody"><input type="hidden" id="mId"><div class="fr"><div class="ff"><label class="fl">Paciente</label><select class="fc" id="mPac"></select></div><div class="ff"><label class="fl">Data e hora</label><input type="datetime-local" class="fc" id="mDt"></div></div><div class="ff"><label class="fl">Parâmetro</label><select class="fc" id="mParam" onchange="upUnit()"><option value="Pressão arterial">Pressão arterial (sistólica/diastólica)</option><option>Peso</option><option>Glicemia</option><option>Frequência cardíaca</option><option>Saturação O2</option><option>Temperatura</option><option>Hemoglobina</option><option>Creatinina</option><option>HbA1c</option><option>Colesterol total</option><option>Triglicerídeos</option><option>PSA</option><option>CEA</option><option>AFP</option><option>CA 19-9</option><option>CA 125</option><option>PSA livre</option><option>Proteína C reativa</option><option>Ferritina</option><option>Outro</option></select></div>
 <div id="mPAGrp" style="display:none"><div class="ff" style="margin-bottom:8px"><label class="fl">Pressão (formato 120x80)</label><input type="text" class="fc" id="mPAFmt" placeholder="ex: 120x80" oninput="parsePAFmt(this.value)" style="font-size:16px;letter-spacing:1px"></div><div class="fr"><div class="ff"><label class="fl">Sistólica (mmHg)</label><input type="number" class="fc" id="mSist" placeholder="120"></div><div class="ff"><label class="fl">Diastólica (mmHg)</label><input type="number" class="fc" id="mDias" placeholder="80"></div></div></div>
 <div id="mValGrp"><div class="fr"><div class="ff"><label class="fl">Valor *</label><input type="number" step="0.01" class="fc" id="mVal"></div><div class="ff"><label class="fl">Unidade</label><input type="text" class="fc" id="mUnit"></div></div></div>
 <div id="mCusG" class="ff" style="display:none"><label class="fl">Nome do parâmetro</label><input type="text" class="fc" id="mCus" placeholder="Ex: Proteína X, Marcador Y..."></div>
-<div class="ff"><label class="fl">Observações</label><textarea class="fc" id="mObs"></textarea></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('medicao')">Cancelar</button><button class="btn btn-p btn-sm" onclick="saveMed()">Salvar</button></div></div></div>
+<div class="ff"><label class="fl">Observações</label><textarea class="fc" id="mObs"></textarea></div><div style="display:flex;align-items:center;gap:10px;padding:8px 0"><label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:var(--n70)"><input type="checkbox" id="mFav" style="width:15px;height:15px;accent-color:var(--p)"> <span>⭐ Indicador favorito (aparece na Evolução Clínica)</span></label></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('medicao')">Cancelar</button><button class="btn btn-p btn-sm" onclick="saveMed()">Salvar</button></div></div></div>
 <div class="bk" id="m-anotacao"><div class="mb"><div class="mh"><div class="mt" id="ttlA">Nova Anotação</div><button class="mx" onclick="closeM('anotacao')">✕</button></div><div class="mbody"><input type="hidden" id="aId"><div class="fr"><div class="ff"><label class="fl">Paciente</label><select class="fc" id="aPac"></select></div><div class="ff"><label class="fl">Data</label><input type="date" class="fc" id="aDt"></div></div><div class="ff"><label class="fl">Anotação *</label><textarea class="fc" id="aTxt" style="min-height:100px"></textarea></div><div class="fr"><div class="ff"><label class="fl">Tags (vírgula)</label><input type="text" class="fc" id="aTags"></div><div class="ff"><label class="fl">Situação</label><select class="fc" id="aSit"><option value="ativo">🔴 Ativo</option><option value="resolucao">🟡 Em resolução</option><option value="resolvido">🟢 Resolvido</option></select></div></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('anotacao')">Cancelar</button><button class="btn btn-p btn-sm" onclick="saveAnot()">Salvar</button></div></div></div>
 <div class="bk" id="m-resultado"><div class="mb"><div class="mh"><div class="mt">Novo Resultado</div><button class="mx" onclick="closeM('resultado')">✕</button></div><div class="mbody"><div class="fr"><div class="ff"><label class="fl">Paciente</label><select class="fc" id="rPac"></select></div><div class="ff"><label class="fl">Tipo *</label><input type="text" class="fc" id="rTipo"></div></div><div class="fr"><div class="ff"><label class="fl">Data</label><input type="date" class="fc" id="rDt"></div><div class="ff"><label class="fl">Local</label><input type="text" class="fc" id="rLoc"></div></div><div class="ff"><label class="fl">Resultado / Laudo</label><textarea class="fc" id="rTxt" style="min-height:90px"></textarea></div><div class="ff"><label class="fl">Interpretação</label><textarea class="fc" id="rInterp"></textarea></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('resultado')">Cancelar</button><button class="btn btn-p btn-sm" onclick="saveRes()">Salvar</button></div></div></div>
 <div class="bk" id="m-pdfimport"><div class="mb"><div class="mh"><div class="mt">Importar PDF</div><button class="mx" onclick="closeM('pdfimport')">✕</button></div><div class="mbody"><div class="ff"><label class="fl">Paciente</label><select class="fc" id="pdfPac"></select></div><div class="pdfz" onclick="document.getElementById('pdfIn').click()"><div style="font-size:30px;margin-bottom:7px">📄</div><div style="font-size:13.5px;font-weight:500;margin-bottom:4px;color:var(--n)">Selecionar PDF</div><div style="font-size:12px;color:var(--n70)">Aceita PDF — extrai texto automaticamente para revisão</div><input type="file" id="pdfIn" accept=".pdf,image/*" style="display:none" onchange="handlePDF(this)"></div><div id="pdfSt" style="display:none" class="aistrip"><div class="spin"></div> Extraindo texto do PDF...</div><div id="pdfPrev" style="display:none;margin-top:14px"><div class="lxs" style="margin-bottom:8px">Revise antes de salvar:</div><div class="ff"><label class="fl">Tipo</label><input type="text" class="fc" id="pTipo"></div><div class="fr"><div class="ff"><label class="fl">Data</label><input type="date" class="fc" id="pDt"></div><div class="ff"><label class="fl">Local</label><input type="text" class="fc" id="pLoc"></div></div><div class="ff"><label class="fl">Resultado</label><textarea class="fc" id="pRes" style="min-height:90px"></textarea></div><div class="ff"><label class="fl">Texto extraído (revise e corrija acima)</label><textarea class="fc" id="pInterp" style="min-height:120px;font-size:11px;color:var(--n70)"></textarea></div></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('pdfimport')">Cancelar</button><button class="btn btn-p btn-sm" id="pdfSaveBtn" style="display:none" onclick="savePDFRes()">Salvar resultado</button></div></div></div>
@@ -1076,9 +1101,137 @@ function popConsDropdowns(pacNome){var pac=S.pacs.find(function(p){return p.nome
 
 /* EXAMES */
 function swExT(t,el){S.exTab=t;document.querySelectorAll('#page-exames .ti').forEach(x=>x.classList.remove('on'));el.classList.add('on');renderExames();}
-function renderExames(){const ids=fIds(),stMap={afazer:'A fazer',realizados:'Realizado'};const list=S.exs.filter(e=>ids.includes(e.paciente_id)&&e.status===stMap[S.exTab]);const el=document.getElementById('liE');if(!el)return;if(!list.length){el.innerHTML=emS('🔬',S.exTab==='afazer'?'Sem exames pendentes':'Sem exames realizados','');return;}el.innerHTML=list.map(e=>`<div class="lr"><div class="lr-ic" style="background:var(--sl)">🔬</div><div class="lr-b"><div class="lr-t">${esc(e.tipo)}</div><div class="lr-m">${chPac(gPN(e.paciente_id))} ${chSt(e.status)} ${chPri(e.prioridade)} ${e.data_agendada?`<span>📅 ${fmtD(e.data_agendada)}</span>`:''} ${e.data_realizada?`<span>✅ ${fmtD(e.data_realizada)}</span>`:''} ${e.local?`<span>📍 ${esc(e.local)}</span>`:''}</div>${e.resultado?`<div style="margin-top:5px;padding:7px 9px;background:var(--card2);border-radius:var(--rsm);font-size:11.5px;color:var(--n70)">${esc(e.resultado.substring(0,120))}…</div>`:''} ${byL(e.cadastrado_por)}</div><div class="lr-a">${e.status==='A fazer'?`<button class="btn btn-xs btn-p" onclick="markExOk('${e.id}')">✓</button>`:''}<button class="btn btn-xs btn-g" onclick="editEx('${e.id}')">✏</button><button class="btn btn-xs btn-d" onclick="del('exames','${e.id}',loadAll,renderExames)">✕</button></div></div>`).join('');}
-async function saveEx(){const id=document.getElementById('eId').value;const d={paciente_id:gPId(document.getElementById('ePac').value),tipo:document.getElementById('eTipo').value,data_agendada:document.getElementById('eDtA').value||null,data_realizada:document.getElementById('eDtR').value||null,status:document.getElementById('eSt').value,local:document.getElementById('eLoc').value,prioridade:document.getElementById('ePri').value,resultado:document.getElementById('eRes').value,observacoes:document.getElementById('eObs').value};if(!id)d.cadastrado_por=S.uName;if(!d.tipo){toast('Preencha o tipo','error');return;}const{error}=id?await db.from('exames').update(d).eq('id',id):await db.from('exames').insert(d);if(error){toast('Erro: '+error.message,'error');return;}toast('Exame salvo!','ok');closeM('exame');await loadAll();renderExames();renderDash();}
-function editEx(id){const e=S.exs.find(e=>e.id===id);if(!e)return;document.getElementById('eId').value=e.id;document.getElementById('ePac').value=gPN(e.paciente_id);document.getElementById('eTipo').value=e.tipo||'';document.getElementById('eDtA').value=e.data_agendada||'';document.getElementById('eDtR').value=e.data_realizada||'';document.getElementById('eSt').value=e.status||'A fazer';document.getElementById('eLoc').value=e.local||'';document.getElementById('ePri').value=e.prioridade||'Media';document.getElementById('eRes').value=e.resultado||'';document.getElementById('eObs').value=e.observacoes||'';document.getElementById('ttlE').textContent='Editar Exame';openM('exame');}
+function renderExames(){
+  const ids=fIds();
+  const stMap={afazer:'A fazer',realizados:'Realizado'};
+  let list;
+  if(S.exTab==='comresultado'){
+    list=S.exs.filter(e=>ids.includes(e.paciente_id)&&(e.resultado||(e.resultados&&Object.keys(e.resultados).length)));
+  } else {
+    list=S.exs.filter(e=>ids.includes(e.paciente_id)&&e.status===stMap[S.exTab||'afazer']);
+  }
+  const el=document.getElementById('liE');if(!el)return;
+  if(!list.length){el.innerHTML=emS('🔬',S.exTab==='afazer'?'Sem exames pendentes':S.exTab==='comresultado'?'Sem resultados registrados':'Sem exames realizados','');return;}
+  el.innerHTML=list.map(e=>{
+    // Build resultados jsonb preview
+    let resPreview='';
+    if(e.resultados&&Object.keys(e.resultados).length){
+      const vals=Object.entries(e.resultados).slice(0,4).map(([k,v])=>`<span class="res-badge">${esc(k)}: <strong>${esc(String(v))}</strong></span>`).join(' ');
+      resPreview=`<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px">${vals}${Object.keys(e.resultados).length>4?`<span style="font-size:11px;color:var(--n40)">+${Object.keys(e.resultados).length-4} mais</span>`:''}</div>`;
+    } else if(e.resultado){
+      resPreview=`<div style="margin-top:5px;padding:7px 9px;background:var(--card2);border-radius:var(--rsm);font-size:11.5px;color:var(--n70)">${esc(e.resultado.substring(0,120))}${e.resultado.length>120?'…':''}</div>`;
+    }
+    return `<div class="lr"><div class="lr-ic" style="background:var(--sl)">🔬</div><div class="lr-b"><div class="lr-t">${esc(e.tipo)}</div><div class="lr-m">${chPac(gPN(e.paciente_id))} ${chSt(e.status)} ${chPri(e.prioridade)} ${e.data_agendada?`<span>📅 ${fmtD(e.data_agendada)}</span>`:''} ${e.data_realizada?`<span>✅ ${fmtD(e.data_realizada)}</span>`:''} ${e.local?`<span>📍 ${esc(e.local)}</span>`:''}</div>${resPreview} ${byL(e.cadastrado_por)}</div><div class="lr-a">${e.status==='A fazer'?`<button class="btn btn-xs btn-p" onclick="markExOk('${e.id}')">✓</button>`:''}<button class="btn btn-xs btn-g" onclick="editEx('${e.id}')">✏</button><button class="btn btn-xs btn-d" onclick="del('exames','${e.id}',loadAll,renderExames)">✕</button></div></div>`;
+  }).join('');
+}
+/* ══ PAINÉIS DE RESULTADO ══ */
+var PAINEIS={
+  livre:[],
+  hemograma:['Hemoglobina','Leucócitos','Neutrófilos','Linfócitos','Plaquetas','Hematócrito','VCM','HCM'],
+  funcao_renal:['Creatinina','Ureia','Ácido úrico','Cistatina C','TFGe'],
+  lipidico:['Colesterol total','HDL','LDL','Triglicerídeos','VLDL'],
+  mieloma:['IgA','IgG','IgM','Cadeias leves Kappa','Cadeias leves Lambda','Relação Kappa/Lambda','Plasmócitos medulares (%)','Proteína M'],
+  oncologia:['CA 19-9','CEA','CA 125','PSA','AFP','Beta-HCG','Cromogranina A','NSE']
+};
+var UNIDADES_PAINEL={
+  'Hemoglobina':'g/dL','Leucócitos':'mil/mm³','Plaquetas':'mil/mm³','Hematócrito':'%','Neutrófilos':'%','Linfócitos':'%',
+  'Creatinina':'mg/dL','Ureia':'mg/dL','TFGe':'mL/min','Ácido úrico':'mg/dL',
+  'Colesterol total':'mg/dL','HDL':'mg/dL','LDL':'mg/dL','Triglicerídeos':'mg/dL',
+  'IgA':'mg/dL','IgG':'mg/dL','IgM':'mg/dL','Relação Kappa/Lambda':'ratio','Plasmócitos medulares (%)':'%','Proteína M':'g/dL',
+  'CA 19-9':'U/mL','CEA':'ng/mL','CA 125':'U/mL','PSA':'ng/mL','AFP':'ng/mL'
+};
+function swPainel(btn,tipo){
+  document.querySelectorAll('#ePainelTipo .painel-tipo-btn').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  document.getElementById('ePainelAtivo').value=tipo;
+  buildPainelCampos(tipo);
+}
+function buildPainelCampos(tipo){
+  var campos=PAINEIS[tipo]||[];
+  var wrap=document.getElementById('ePainelCampos');
+  var resWrap=document.getElementById('eResWrap');
+  if(!campos.length){wrap.style.display='none';if(resWrap)resWrap.style.display='block';return;}
+  wrap.style.display='block';
+  if(resWrap)resWrap.style.display='none';
+  wrap.innerHTML='<div class="res-campos">'+campos.map(function(campo){
+    var unit=UNIDADES_PAINEL[campo]||'';
+    return '<div class="res-campo"><label>'+esc(campo)+(unit?' <span style="font-weight:400;text-transform:none;color:var(--n40)">('+unit+')</span>':'')+'</label><input type="number" step="0.01" placeholder="—" data-campo="'+esc(campo)+'" data-unidade="'+esc(unit)+'"></div>';
+  }).join('')+'</div>';
+}
+function getResultadosFromForm(){
+  var tipo=document.getElementById('ePainelAtivo')?.value||'livre';
+  if(tipo==='livre')return null;
+  var res={};
+  document.querySelectorAll('#ePainelCampos [data-campo]').forEach(function(inp){
+    if(inp.value.trim())res[inp.dataset.campo]=parseFloat(inp.value);
+  });
+  return Object.keys(res).length?res:null;
+}
+function openExameNovo(){
+  document.getElementById('eId').value='';
+  document.getElementById('ttlE').textContent='Novo Exame';
+  // Reset painel
+  document.querySelectorAll('#ePainelTipo .painel-tipo-btn').forEach(function(b){b.classList.remove('on');});
+  document.querySelector('#ePainelTipo .painel-tipo-btn').classList.add('on');
+  document.getElementById('ePainelAtivo').value='livre';
+  buildPainelCampos('livre');
+  openM('exame');
+}
+async function saveEx(){
+  const id=document.getElementById('eId').value;
+  const resultadosJson=getResultadosFromForm();
+  const d={
+    paciente_id:gPId(document.getElementById('ePac').value),
+    tipo:document.getElementById('eTipo').value,
+    data_agendada:document.getElementById('eDtA').value||null,
+    data_realizada:document.getElementById('eDtR').value||null,
+    status:document.getElementById('eSt').value,
+    local:document.getElementById('eLoc').value,
+    prioridade:document.getElementById('ePri').value,
+    resultado:resultadosJson?null:document.getElementById('eRes').value,
+    resultados:resultadosJson,
+    tipo_painel:document.getElementById('ePainelAtivo')?.value||'livre',
+    observacoes:document.getElementById('eObs').value
+  };
+  if(!id)d.cadastrado_por=S.uName;
+  if(!d.tipo){toast('Preencha o tipo','error');return;}
+  const{error}=id?await db.from('exames').update(d).eq('id',id):await db.from('exames').insert(d);
+  if(error){toast('Erro: '+error.message,'error');return;}
+  // Se tem resultados estruturados, salvar como medições também
+  if(resultadosJson&&d.data_realizada){
+    const pacId=d.paciente_id;
+    const dtMed=d.data_realizada+'T12:00:00';
+    const inserts=Object.entries(resultadosJson).map(function([campo,val]){
+      return{paciente_id:pacId,parametro:campo,valor:String(val),unidade:UNIDADES_PAINEL[campo]||'',data_hora:dtMed,cadastrado_por:S.uName,categoria:'laboratorio'};
+    });
+    if(inserts.length)await db.from('medicoes').insert(inserts);
+  }
+  toast('Exame salvo!','ok');closeM('exame');await loadAll();renderExames();renderDash();
+}
+function editEx(id){
+  const e=S.exs.find(x=>x.id===id);if(!e)return;
+  document.getElementById('eId').value=e.id;
+  document.getElementById('ePac').value=gPN(e.paciente_id);
+  document.getElementById('eTipo').value=e.tipo||'';
+  document.getElementById('eDtA').value=e.data_agendada||'';
+  document.getElementById('eDtR').value=e.data_realizada||'';
+  document.getElementById('eLoc').value=e.local||'';
+  document.getElementById('eSt').value=e.status||'A fazer';
+  document.getElementById('ePri').value=e.prioridade||'Media';
+  document.getElementById('eObs').value=e.observacoes||'';
+  const tipo=e.tipo_painel||'livre';
+  document.getElementById('ePainelAtivo').value=tipo;
+  const lblMap={livre:'Livre',hemograma:'Hemograma',funcao_renal:'Função Renal',lipidico:'Lipídico',mieloma:'Mieloma',oncologia:'Oncologia'};
+  document.querySelectorAll('#ePainelTipo .painel-tipo-btn').forEach(function(b){b.classList.toggle('on',b.textContent.trim()===lblMap[tipo]);});
+  buildPainelCampos(tipo);
+  if(e.resultados&&Object.keys(e.resultados).length){
+    setTimeout(function(){document.querySelectorAll('#ePainelCampos [data-campo]').forEach(function(inp){if(e.resultados[inp.dataset.campo]!=null)inp.value=e.resultados[inp.dataset.campo];});},80);
+  } else {
+    document.getElementById('eRes').value=e.resultado||'';
+  }
+  document.getElementById('ttlE').textContent='Editar Exame';
+  openM('exame');
+}
 async function markExOk(id){await db.from('exames').update({status:'Realizado',data_realizada:new Date().toISOString().slice(0,10)}).eq('id',id);await loadAll();renderExames();renderDash();toast('Exame realizado!','ok');}
 
 /* MEDIÇÕES */
@@ -1124,7 +1277,7 @@ async function saveMed(){
   } else {
     const val=parseFloat(document.getElementById('mVal').value);
     if(!param||isNaN(val)){toast('Preencha parâmetro e valor','error');return;}
-    const d={paciente_id:pacId,data_hora:dt,parametro:param,valor:val,unidade:document.getElementById('mUnit').value,observacoes:obs,cadastrado_por:by};
+    const d={paciente_id:pacId,data_hora:dt,parametro:param,valor:val,unidade:document.getElementById('mUnit').value,observacoes:obs,cadastrado_por:by,favorito:document.getElementById('mFav')?.checked||false};
     const{error}=id?await db.from('medicoes').update(d).eq('id',id):await db.from('medicoes').insert(d);
     if(error){toast('Erro: '+error.message,'error');return;}
   }
