@@ -490,7 +490,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
       <div id="alertBanner"></div>
       <div class="sg">
         <div class="sc" style="cursor:pointer" onclick="openMesPopup()"><div class="sc-blob" style="background:var(--p)"></div><div class="sc-ic" style="background:var(--pl)">🗓</div><div class="sc-num" id="stC">—</div><div class="sc-lbl">Consultas este mês</div></div>
-        <div class="sc" style="cursor:pointer" onclick="navTo('tratamentos')"><div class="sc-blob" style="background:#9b59b6"></div><div class="sc-ic" style="background:rgba(155,89,182,0.13)">💉</div><div class="sc-num" id="stT">—</div><div class="sc-lbl">Tratamentos este mês</div></div>
+        <div class="sc" style="cursor:pointer" onclick="openTrtMesPopup()"><div class="sc-blob" style="background:#9b59b6"></div><div class="sc-ic" style="background:rgba(155,89,182,0.13)">💉</div><div class="sc-num" id="stT">—</div><div class="sc-lbl">Tratamentos este mês</div></div>
         <div class="sc" style="cursor:pointer" onclick="navTo('exames')"><div class="sc-blob" style="background:var(--s)"></div><div class="sc-ic" style="background:var(--sl)">🔬</div><div class="sc-num" id="stE">—</div><div class="sc-lbl">Exames pendentes</div></div>
         <div class="sc" style="cursor:pointer" onclick="openSemanaPopup()"><div class="sc-blob" style="background:var(--a)"></div><div class="sc-ic" style="background:var(--al)">⏳</div><div class="sc-num" id="stW">—</div><div class="sc-lbl">Esta semana</div></div>
         <div class="sc" style="cursor:pointer" onclick="navTo('pendencias')"><div class="sc-blob" style="background:var(--p)"></div><div class="sc-ic" style="background:var(--pl)">☑</div><div class="sc-num" id="stPend">—</div><div class="sc-lbl">Pendências abertas</div></div>
@@ -678,6 +678,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
 <div class="bk" id="m-dayview"><div class="mb"><div class="mh"><div class="mt" id="dayviewTitle">Eventos do dia</div><button class="mx" onclick="closeM('dayview')">✕</button></div><div class="mbody"><div id="dayviewContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('dayview')">Fechar</button></div></div></div>
 <div class="bk" id="m-semana"><div class="mb"><div class="mh"><div class="mt">📅 Esta semana</div><button class="mx" onclick="closeM('semana')">✕</button></div><div class="mbody"><div id="semanaContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('semana')">Fechar</button></div></div></div>
 <div class="bk" id="m-mes"><div class="mb"><div class="mh"><div class="mt" id="mesMTitle">Consultas do mês</div><button class="mx" onclick="closeM('mes')">✕</button></div><div class="mbody"><div id="mesContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('mes')">Fechar</button></div></div></div>
+<div class="bk" id="m-trtmes"><div class="mb"><div class="mh"><div class="mt" id="trtMesTitle">Tratamentos do mês</div><button class="mx" onclick="closeM('trtmes')">✕</button></div><div class="mbody"><div id="trtMesContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('trtmes')">Fechar</button></div></div></div>
 <div class="bk" id="m-alertas"><div class="mb"><div class="mh"><div class="mt">🔔 Alertas e lembretes</div><button class="mx" onclick="closeM('alertas')">✕</button></div><div class="mbody"><div id="alertasContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('alertas')">Fechar</button></div></div></div>
 <div class="bk" id="m-lembretes"><div class="mb"><div class="mh"><div class="mt">Lembretes</div><button class="mx" onclick="closeM('lembretes')">✕</button></div><div class="mbody"><div id="lembretesContent"></div></div><div class="mft"><button class="btn btn-p btn-sm" onclick="closeM('lembretes')">Ok</button></div></div></div>
 <div class="bk" id="m-vercons"><div class="mb"><div class="mh"><div class="mt">Detalhes da Consulta</div><button class="mx" onclick="closeM('vercons')">✕</button></div><div class="mbody"><div id="verConsContent"></div></div><div class="mft"><button class="btn btn-g btn-sm" onclick="closeM('vercons')">Fechar</button><a class="btn btn-s btn-sm" id="verConsGcBtn" href="#" target="_blank" style="display:none">📅 Google Calendar</a><button class="btn btn-p btn-sm" id="verConsEditBtn">✏ Editar</button></div></div></div>
@@ -2236,6 +2237,48 @@ saveCons = async function(){
 
 /* ══ RENDERTI — movido para bloco TIMELINE acima ══ */
 
+/* ══ TRATAMENTOS DO MÊS POPUP ══ */
+function openTrtMesPopup(){
+  var ids=fIds();var now=new Date();
+  var meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var trts=(S.trts||[]).filter(function(t){
+    if(!ids.includes(t.paciente_id)||!t.data_inicio)return false;
+    var d=new Date(t.data_inicio);
+    return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
+  }).sort(function(a,b){return new Date(a.data_inicio)-new Date(b.data_inicio);});
+  document.getElementById('trtMesTitle').textContent='💉 '+meses[now.getMonth()]+' '+now.getFullYear();
+  var el=document.getElementById('trtMesContent');
+  if(!trts.length){
+    // also check Em andamento treatments
+    var emAndamento=(S.trts||[]).filter(function(t){return ids.includes(t.paciente_id)&&t.status==='Em andamento';});
+    if(emAndamento.length){
+      el.innerHTML='<div style="margin-bottom:10px;font-size:12px;color:var(--n70)">Nenhum tratamento iniciado este mês.<br>Tratamentos em andamento:</div>'+
+        emAndamento.map(function(t){
+          return'<div class="lr" style="padding:9px 0;border-bottom:1px solid var(--n06)">'
+            +'<div class="lr-ic" style="background:rgba(155,89,182,0.13);font-size:14px;width:32px;height:32px">💉</div>'
+            +'<div class="lr-b"><div class="lr-t" style="font-size:13px">'+esc(t.tipo||'Tratamento')+'</div>'
+            +'<div class="lr-m">'+chPac(gPN(t.paciente_id))
+            +(t.ciclo?'<span>Ciclo '+t.ciclo+'</span>':'')
+            +(t.dia_sessao?'<span>Próxima: '+fmtD(t.dia_sessao)+'</span>':'')
+            +chSt(t.status)+'</div></div></div>';
+        }).join('');
+    } else {
+      el.innerHTML=emS('💉','Nenhum tratamento este mês','');
+    }
+    openM('trtmes');return;
+  }
+  el.innerHTML=trts.map(function(t){
+    return'<div class="lr" style="padding:9px 0;border-bottom:1px solid var(--n06)">'
+      +'<div class="lr-ic" style="background:rgba(155,89,182,0.13);font-size:14px;width:32px;height:32px">💉</div>'
+      +'<div class="lr-b"><div class="lr-t" style="font-size:13px"><span style="font-weight:600;color:var(--n)">'+fmtD(t.data_inicio)+'</span> · '+esc(t.tipo||'Tratamento')+'</div>'
+      +'<div class="lr-m">'+chPac(gPN(t.paciente_id))
+      +(t.ciclo?'<span>Ciclo '+t.ciclo+'</span>':'')
+      +(t.sessoes_realizadas&&t.total_sessoes?'<span>Sessão '+t.sessoes_realizadas+'/'+t.total_sessoes+'</span>':'')
+      +(t.local?'<span>📍 '+esc(t.local)+'</span>':'')
+      +chSt(t.status)+'</div></div></div>';
+  }).join('');
+  openM('trtmes');
+}
 /* ══ MÊS POPUP ══ */
 function openMesPopup(){
   var ids=fIds();var now=new Date();
