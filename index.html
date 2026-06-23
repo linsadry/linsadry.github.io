@@ -898,6 +898,17 @@ function gPN(id){return S.pacs.find(p=>p.id===id)?.nome||'?';}
 function gP(nome){return S.pacs.find(p=>p.nome===nome);}
 function fIds(){return S.filter==='Ambos'?S.pacs.map(p=>p.id):S.pacs.filter(p=>p.nome===S.filter).map(p=>p.id);}
 function fmtD(d){if(!d)return'';const s=String(d);const dt=s.length===10?new Date(s+'T12:00:00'):new Date(d);if(isNaN(dt))return d;return dt.toLocaleDateString('pt-BR');}
+/* ══ TIMEZONE HELPER ══ */
+function localToISOWithOffset(dtLocalStr){
+  if(!dtLocalStr)return null;
+  var d=new Date(dtLocalStr);if(isNaN(d))return dtLocalStr+':00';
+  var off=-d.getTimezoneOffset();
+  var sign=off>=0?'+':'-';
+  var hh=String(Math.floor(Math.abs(off)/60)).padStart(2,'0');
+  var mm=String(Math.abs(off)%60).padStart(2,'0');
+  var pad=function(n){return String(n).padStart(2,'0');};
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes())+':00'+sign+hh+':'+mm;
+}
 function fmtDT(d){
   if(!d)return'';
   var dt=new Date(d);
@@ -1095,7 +1106,7 @@ function openDay(y,m,d){
 
 /* CONSULTAS */
 function renderConsultas(){const ids=fIds(),sf=document.getElementById('filtCS')?.value||'';let list=S.cons.filter(c=>ids.includes(c.paciente_id));if(sf)list=list.filter(c=>c.status===sf);const el=document.getElementById('liC');if(!el)return;if(!list.length){el.innerHTML=emS('🩺','Nenhuma consulta','');return;}el.innerHTML=list.map(c=>`<div class="lr"><div class="lr-ic" style="background:var(--pl)">🩺</div><div class="lr-b"><div class="lr-t">${esc(c.especialidade)||'Consulta'}${c.profissional?' — Dr(a). '+esc(c.profissional):''}</div><div class="lr-m">${chPac(gPN(c.paciente_id))} ${chSt(c.status)} ${chPri(c.prioridade)} ${c.data_hora?`<span>📅 ${fmtDT(c.data_hora)}</span>`:''} ${c.local?`<span>📍 ${esc(c.local)}</span>`:''}</div>${c.observacoes?`<div style="margin-top:5px;padding:7px 9px;background:var(--card2);border-radius:var(--rsm);font-size:11.5px;color:var(--n70)">📝 ${esc(c.observacoes.substring(0,100))}${c.observacoes.length>100?'…':''}</div>`:''} ${c.orientacoes?`<div style="margin-top:4px;padding:7px 9px;background:var(--card2);border-radius:var(--rsm);font-size:11.5px;color:var(--n70);border-left:2px solid var(--p)">📋 ${esc(c.orientacoes.substring(0,100))}${c.orientacoes.length>100?'…':''}</div>`:''} ${byL(c.cadastrado_por)}</div><div class="lr-a">${c.status!=='Realizada'?`<button class="btn btn-xs btn-p" onclick="markConsOk('${c.id}')">✓</button>`:''} ${gcalLink(c)?'<a class="btn btn-xs btn-s" href="'+gcalLink(c)+'" target="_blank" title="Google Calendar">📅</a>':''}<button class="btn btn-xs btn-g" onclick="editCons('${c.id}')">✏</button><button class="btn btn-xs btn-d" onclick="del('consultas','${c.id}',loadAll,renderConsultas)">✕</button></div></div>`).join('');}
-async function saveCons(){const id=document.getElementById('cId').value;const d={paciente_id:gPId(document.getElementById('cPac').value),data_hora:document.getElementById('cDt').value?document.getElementById('cDt').value+':00':null,especialidade:document.getElementById('cEsp').value,profissional:document.getElementById('cProf').value,local:document.getElementById('cLoc').value,status:document.getElementById('cSt').value,prioridade:document.getElementById('cPri').value,observacoes:document.getElementById('cObs').value,orientacoes:document.getElementById('cOri').value};if(!id)d.cadastrado_por=S.uName;if(!d.especialidade){toast('Preencha a especialidade','error');return;}const{error}=id?await db.from('consultas').update(d).eq('id',id):await db.from('consultas').insert(d);if(error){toast('Erro: '+error.message,'error');return;}toast('Consulta salva!','ok');closeM('consulta');await loadAll();renderConsultas();renderDash();}
+async function saveCons(){const id=document.getElementById('cId').value;const dtRaw=document.getElementById('cDt').value;const dtFinal=dtRaw?localToISOWithOffset(dtRaw):null;const d={paciente_id:gPId(document.getElementById('cPac').value),data_hora:dtFinal,especialidade:document.getElementById('cEsp').value,profissional:document.getElementById('cProf').value,local:document.getElementById('cLoc').value,status:document.getElementById('cSt').value,prioridade:document.getElementById('cPri').value,observacoes:document.getElementById('cObs').value,orientacoes:document.getElementById('cOri').value};if(!id)d.cadastrado_por=S.uName;if(!d.especialidade){toast('Preencha a especialidade','error');return;}const{error}=id?await db.from('consultas').update(d).eq('id',id):await db.from('consultas').insert(d);if(error){toast('Erro: '+error.message,'error');return;}toast('Consulta salva!','ok');closeM('consulta');await loadAll();renderConsultas();renderDash();}
 function editCons(id){const c=S.cons.find(c=>c.id===id);if(!c)return;document.getElementById('cId').value=c.id;document.getElementById('cPac').value=gPN(c.paciente_id);document.getElementById('cDt').value=c.data_hora?c.data_hora.slice(0,16):'';document.getElementById('cEsp').value=c.especialidade||'';document.getElementById('cProf').value=c.profissional||'';document.getElementById('cLoc').value=c.local||'';document.getElementById('cSt').value=c.status||'Agendada';document.getElementById('cPri').value=c.prioridade||'Media';document.getElementById('cObs').value=c.observacoes||'';document.getElementById('cOri').value=c.orientacoes||'';document.getElementById('ttlC').textContent='Editar Consulta';openM('consulta');var _cn=gPN(c.paciente_id),_cp=c.profissional||'',_cl=c.local||'';setTimeout(function(){popConsDropdowns(_cn);var ps=document.getElementById('cProfSel'),pi=document.getElementById('cProf');if(ps&&_cp){var fp=Array.from(ps.options).find(function(o){return o.value===_cp;});if(fp){ps.value=_cp;if(pi)pi.style.display='none';}else{ps.value='outro';if(pi){pi.style.display='block';pi.value=_cp;}}}var ls=document.getElementById('cLocSel'),li=document.getElementById('cLoc');if(ls&&_cl){var fl=Array.from(ls.options).find(function(o){return o.text===_cl;});if(fl){ls.value=fl.value;if(li)li.value=_cl;}else{ls.value='outro';if(li){li.style.display='block';li.value=_cl;}}}},80);}
 async function markConsOk(id){await db.from('consultas').update({status:'Realizada'}).eq('id',id);await loadAll();renderConsultas();renderDash();toast('Consulta realizada!','ok');}
 function popConsDropdowns(pacNome){var pac=S.pacs.find(function(p){return p.nome===pacNome;});var pacId=pac?pac.id:null;var profSel=document.getElementById('cProfSel');if(profSel){var profs=pacId?S.profs.filter(function(p){return p.paciente_id===pacId;}):S.profs;profSel.innerHTML='<option value="">Selecionar profissional...</option>'+profs.map(function(p){return'<option value="'+p.nome+'">'+p.nome+(p.especialidade?' — '+p.especialidade:'')+'</option>';}).join('')+'<option value="outro">✏️ Digitar outro</option>';}var locSel=document.getElementById('cLocSel');if(locSel){var hosps=pacId?S.hosps.filter(function(h){return h.paciente_id===pacId;}):S.hosps;locSel.innerHTML='<option value="">Selecionar hospital...</option>'+hosps.map(function(h){return'<option value="'+h.id+'">'+h.nome+'</option>';}).join('')+'<option value="outro">✏️ Digitar outro local</option>';}}
@@ -1262,7 +1273,7 @@ async function saveMed(){
   const isPA=param==='Pressão arterial';
   if(param==='Outro')param=document.getElementById('mCus').value||'Outro';
   const pacId=gPId(document.getElementById('mPac').value);
-  const dt=document.getElementById('mDt').value||new Date().toISOString();
+  const dt=localToISOWithOffset(document.getElementById('mDt').value)||new Date().toISOString();
   const obs=document.getElementById('mObs').value;
   const by=id?undefined:S.uName;
   if(isPA){
@@ -1609,7 +1620,7 @@ function openEvento(){
 }
 
 async function saveEvento(){
-  var d={paciente_id:gPId(document.getElementById('evtPac').value),tipo:document.getElementById('evtTipo').value,data_hora:document.getElementById('evtDt').value||new Date().toISOString(),descricao:document.getElementById('evtDesc').value.trim(),severidade:document.getElementById('evtSev').value,cadastrado_por:S.uName};
+  var d={paciente_id:gPId(document.getElementById('evtPac').value),tipo:document.getElementById('evtTipo').value,data_hora:localToISOWithOffset(document.getElementById('evtDt').value)||new Date().toISOString(),descricao:document.getElementById('evtDesc').value.trim(),severidade:document.getElementById('evtSev').value,cadastrado_por:S.uName};
   if(!d.paciente_id){toast('Selecione o paciente','error');return;}
   var{error}=await db.from('eventos_clinicos').insert(d);
   if(error){toast('Erro: '+error.message,'error');return;}
