@@ -843,8 +843,8 @@ function startApp(user){
   document.getElementById('sbUEmail').textContent=S.uEmail;
   document.getElementById('sbUAv').textContent=S.uName.charAt(0).toUpperCase();
   var cn=document.getElementById('cfgNome');if(cn)cn.value=S.uName;
-  loadPacs().catch(function(){});
-  loadAll().catch(function(){});
+  loadPacs().catch(function(e){console.error('loadPacs falhou:',e);});
+loadAll().catch(function(e){console.error('loadAll falhou:',e);});
   setupRT();popSelects();loadEC();setNotifSt();schedNotifs();
   renderDash();
   setTimeout(checkLembretes,2000);
