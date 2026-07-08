@@ -382,6 +382,25 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
 .tl-month-label{font-size:9.5px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--n40);padding:8px 4px 6px;display:flex;align-items:center;gap:8px;}
 .tl-month-label::after{content:'';flex:1;height:1px;background:var(--n06);}
 
+/* ===== TOUR GUIADO ===== */
+.tour-hl{position:fixed;z-index:1000;border-radius:12px;box-shadow:0 0 0 9999px rgba(28,22,15,0.62);pointer-events:none;transition:top .35s cubic-bezier(0.4,0,0.2,1),left .35s cubic-bezier(0.4,0,0.2,1),width .35s cubic-bezier(0.4,0,0.2,1),height .35s cubic-bezier(0.4,0,0.2,1);}
+.tour-tip{position:fixed;z-index:1001;background:var(--card);border-radius:var(--rlg);box-shadow:var(--s3);padding:16px 18px;width:280px;max-width:calc(100vw - 24px);font-family:var(--fb);opacity:0;transform:translateY(6px);transition:top .35s cubic-bezier(0.4,0,0.2,1),left .35s cubic-bezier(0.4,0,0.2,1),opacity .25s ease,transform .25s ease;}
+.tour-tip.on{opacity:1;transform:translateY(0);}
+.tour-tip-step{font-size:10px;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;color:var(--pd);margin-bottom:6px;}
+.tour-tip h4{font-family:var(--fd);font-size:15.5px;color:var(--n);margin-bottom:5px;font-weight:600;}
+.tour-tip p{font-size:12.5px;color:var(--n70);line-height:1.55;margin-bottom:14px;}
+.tour-tip-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.tour-dots{display:flex;gap:4px;}
+.tour-dot{width:5px;height:5px;border-radius:50%;background:var(--n15);transition:background .2s;}
+.tour-dot.on{background:var(--p);}
+.tour-btns{display:flex;gap:6px;align-items:center;}
+.tour-skip{background:none;border:none;color:var(--n40);font-size:11.5px;font-family:var(--fb);cursor:pointer;padding:4px;}
+.tour-skip:hover{color:var(--n70);}
+.tour-prev{background:none;border:none;color:var(--n70);font-size:12px;font-family:var(--fb);cursor:pointer;padding:6px 8px;}
+.tour-next{background:var(--p);border:none;color:#fff;font-size:12px;font-weight:600;font-family:var(--fb);cursor:pointer;padding:7px 14px;border-radius:var(--rf);}
+.tour-next:hover{background:var(--pd);}
+@media(max-width:900px){.tour-tip{width:250px;}}
+  
 </style>
 </head>
 <body>
@@ -455,28 +474,29 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
     </div>
     <nav class="sb-nav">
       <div class="sb-sec">Início</div>
-      <div class="sb-it on" onclick="navTo('dashboard')"><span class="sb-ic">⊞</span>Dashboard</div>
-      <div class="sb-sec">Clínico</div>
+      <div class="sb-it on" id="navDashboard" onclick="navTo('dashboard')"><span class="sb-ic">⊞</span>Dashboard</div>
+      <div class="sb-sec" id="secClinico">Clínico</div>
       <div class="sb-it" onclick="navTo('saude')"><span class="sb-ic">📈</span>Evolução Clínica</div>
       <div class="sb-it" onclick="navTo('consultas')"><span class="sb-ic">🩺</span>Consultas</div>
       <div class="sb-it" onclick="navTo('exames')"><span class="sb-ic">🔬</span>Exames</div>
       <div class="sb-it" onclick="navTo('tratamentos')"><span class="sb-ic">💉</span>Tratamentos</div>
       <div class="sb-it" onclick="navTo('timeline')"><span class="sb-ic">◎</span>Linha do Tempo</div>
-      <div class="sb-sec">Registros</div>
+      <div class="sb-sec" id="secRegistros">Registros</div>
       <div class="sb-it" onclick="navTo('anotacoes')"><span class="sb-ic">✍</span>Anotações</div>
       <div class="sb-it" onclick="navTo('pendencias')"><span class="sb-ic">☑</span>Pendências</div>
-      <div class="sb-sec">Pessoas</div>
+      <div class="sb-sec" id="secPessoas">Pessoas</div>
       <div class="sb-it" onclick="navTo('profissionais')"><span class="sb-ic">👨‍⚕️</span>Profissionais</div>
       <div class="sb-it" onclick="navTo('cuidadores')"><span class="sb-ic">👤</span>Cuidadores</div>
       <div class="sb-sec">Pacientes</div>
       <div id="sbPatLinks"></div>
-      <div class="sb-it sb-sub" onclick="openAddPac()"><span class="sb-ic">＋</span>Adicionar paciente</div>
-      <div class="sb-sec">Dados</div>
+      <div class="sb-it sb-sub" id="navAddPac" onclick="openAddPac()"><span class="sb-ic">＋</span>Adicionar paciente</div>
+      <div class="sb-sec" id="secDados">Dados</div>
       <div class="sb-it" onclick="navTo('acessos')"><span class="sb-ic">🔐</span>Acessos & Logins</div>
       <div class="sb-it" onclick="navTo('plantoes')"><span class="sb-ic">📅</span>Escala de Plantões</div>
       <div class="sb-it" onclick="navTo('financeiro')"><span class="sb-ic">💰</span>Financeiro</div>
       <div class="sb-sec">Sistema</div>
       <div class="sb-it" onclick="navTo('config')"><span class="sb-ic">⚙</span>Configurações</div>
+      <div class="sb-it" id="navTour" onclick="startTour()"><span class="sb-ic">🧭</span>Tour guiado</div>
     </nav>
     <div class="sb-filter">
       <div class="sb-fl">Visualizar</div>
@@ -497,7 +517,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
     <header class="topbar">
       <div><div class="tb-eye" id="tbEye">Início</div><div class="tb-title" id="tbTitle">Dashboard</div></div>
       <div class="tb-right">
-        <div class="sw-wrap">
+        <div class="sw-wrap" id="dashSearchWrap">
           <span class="sic">🔍</span>
           <input type="text" class="si" id="sInp" placeholder="Buscar..." oninput="doSearch(this.value)">
           <div class="sdrop" id="sDrop"></div>
@@ -509,7 +529,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
 
     <div class="page on" id="page-dashboard">
       <div id="alertBanner"></div>
-      <div class="sg">
+      <div class="sg" id="dashStatsGrid">
         <div class="sc" style="cursor:pointer" onclick="openMesPopup()"><div class="sc-blob" style="background:var(--p)"></div><div class="sc-ic" style="background:var(--pl)">🗓</div><div class="sc-num" id="stC">—</div><div class="sc-lbl">Consultas este mês</div></div>
         <div class="sc" style="cursor:pointer" onclick="openTrtMesPopup()"><div class="sc-blob" style="background:#9b59b6"></div><div class="sc-ic" style="background:rgba(155,89,182,0.13)">💉</div><div class="sc-num" id="stT">—</div><div class="sc-lbl">Tratamentos este mês</div></div>
         <div class="sc" style="cursor:pointer" onclick="navTo('exames')"><div class="sc-blob" style="background:var(--s)"></div><div class="sc-ic" style="background:var(--sl)">🔬</div><div class="sc-num" id="stE">—</div><div class="sc-lbl">Exames pendentes</div></div>
@@ -519,6 +539,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
       </div>
       <div class="dg">
         <div class="card">
+          <div class="card" id="dashCalCard">
           <div class="ch"><div class="cm" id="calT"></div><div class="cnv"><button class="cb" onclick="calPrev()">‹</button><button class="cb cb-t" onclick="calToday()">Hoje</button><button class="cb" onclick="calNext()">›</button></div></div>
           <div class="cwds"><div class="cwd">Dom</div><div class="cwd">Seg</div><div class="cwd">Ter</div><div class="cwd">Qua</div><div class="cwd">Qui</div><div class="cwd">Sex</div><div class="cwd">Sáb</div></div>
           <div class="cgrid" id="calGrid"></div>
@@ -526,7 +547,7 @@ textarea.fc{resize:vertical;min-height:76px;line-height:1.6;}
         </div>
         <div class="dc">
           <div class="card card-sm"><div class="sh" style="margin-bottom:10px"><div class="sec-t" style="font-size:13.5px">Próximos eventos</div></div><div id="proxEvs"><div class="lrow"><div class="spin"></div></div></div></div>
-          <div class="card card-sm"><div class="sh" style="margin-bottom:10px"><div class="sec-t" style="font-size:13.5px">Pendências</div><button class="btn btn-xs btn-g" onclick="navTo('pendencias')">Ver →</button></div><div id="pendencias"><div class="lrow"><div class="spin"></div></div></div></div>
+          <div class="card card-sm" id="dashPendCard"><div class="sh" style="margin-bottom:10px"><div class="sec-t" style="font-size:13.5px">Pendências</div><button class="btn btn-xs btn-g" onclick="navTo('pendencias')">Ver →</button></div><div id="pendencias"><div class="lrow"><div class="spin"></div></div></div></div>
         </div>
       </div>
     </div>
@@ -827,6 +848,7 @@ function startApp(user){
   setupRT();popSelects();loadEC();setNotifSt();schedNotifs();
   renderDash();
   setTimeout(checkLembretes,2000);
+  setTimeout(maybeAutoTour,1400);
 }
 
 async function logout(){
@@ -2873,6 +2895,103 @@ function renderProfsPac(el,pac){
     html+='</div></div></div>';
   });
   el.innerHTML=html;
+}
+/* ===== TOUR GUIADO ===== */
+var TOUR_STEPS=[
+{sel:'.sb-logo-row',mob:true,t:'Bem-vinda ao CuidaBem 👋',d:'Um tour rápido pra você conhecer onde fica cada coisa. Pode pular quando quiser — e rever depois clicando em "Tour guiado" no menu.'},
+{sel:'#navDashboard',mob:true,t:'Dashboard',d:'Sua visão geral: consultas do mês, pendências, calendário e próximos eventos, tudo em um só lugar.'},
+{sel:'#secClinico',mob:true,t:'Clínico',d:'Evolução Clínica, Consultas, Exames, Tratamentos e Linha do Tempo — todo o histórico de saúde fica aqui.'},
+{sel:'#secRegistros',mob:true,t:'Registros',d:'Anotações do dia a dia e Pendências (tarefas e lembretes em aberto).'},
+{sel:'#secPessoas',mob:true,t:'Pessoas',d:'Profissionais de saúde e cuidadores envolvidos nos cuidados.'},
+{sel:'.sb-filter',mob:true,t:'Trocar de paciente',d:'Use esses botões pra filtrar o app inteiro por um paciente específico ou ver os dois ao mesmo tempo (Ambos).'},
+{sel:'#navAddPac',mob:true,t:'Adicionar paciente',d:'Cadastre um novo paciente pra acompanhar por aqui.'},
+{sel:'#secDados',mob:true,t:'Dados',d:'Acessos & Logins, Escala de Plantões e Financeiro — informações de apoio, fora do clínico.'},
+{sel:'#dashStatsGrid',mob:false,t:'Cards do Dashboard',d:'Clique em qualquer card pra ir direto pra aquela seção — é o caminho mais rápido pra registrar algo novo.'},
+{sel:'#dashCalCard',mob:false,t:'Calendário',d:'Mostra consultas e tratamentos por dia. Use as setas (‹ ›) pra navegar entre os meses.'},
+{sel:'#dashPendCard',mob:false,t:'Pendências rápidas',d:'Veja as pendências mais urgentes direto no Dashboard, ou clique em "Ver →" pra gerenciar todas.'},
+{sel:'#dashSearchWrap',mob:false,t:'Buscar',d:'Busque pacientes, consultas, exames e mais — tudo pelo mesmo campo.'},
+{sel:'#navTour',mob:true,t:'Pronto! ✅',d:'Você pode rever esse tour quando quiser clicando aqui no menu.'}
+];
+var _tourI=0,_tourOn=false;
+
+function tourSidebar(open){
+  if(window.innerWidth>900)return;
+  var sb=document.getElementById('sidebar'),ov=document.getElementById('sbOv');
+  if(!sb||!ov)return;
+  if(open){sb.classList.add('on');ov.classList.add('on');}
+  else{sb.classList.remove('on');ov.classList.remove('on');}
+}
+
+function startTour(){
+  if(!document.getElementById('tourHl')){
+    var hl=document.createElement('div');hl.id='tourHl';hl.className='tour-hl';document.body.appendChild(hl);
+    var tip=document.createElement('div');tip.id='tourTip';tip.className='tour-tip';document.body.appendChild(tip);
+  }
+  _tourI=0;_tourOn=true;
+  navTo('dashboard');
+  setTimeout(function(){tourShow(0);},150);
+}
+
+function tourShow(i){
+  var steps=TOUR_STEPS;
+  if(i<0||i>=steps.length){tourEnd();return;}
+  _tourI=i;
+  var st=steps[i];
+  var el=document.querySelector(st.sel);
+  if(!el){ i<steps.length-1?tourShow(i+1):tourEnd(); return; }
+  tourSidebar(!!st.mob);
+  el.scrollIntoView({block:'center',behavior:'auto'});
+  requestAnimationFrame(function(){
+    setTimeout(function(){tourPosition(el,st,i);},st.mob&&window.innerWidth<=900?250:20);
+  });
+}
+
+function tourPosition(el,st,i){
+  var r=el.getBoundingClientRect();
+  var pad=6;
+  var hl=document.getElementById('tourHl');
+  hl.style.top=(r.top-pad)+'px';hl.style.left=(r.left-pad)+'px';
+  hl.style.width=(r.width+pad*2)+'px';hl.style.height=(r.height+pad*2)+'px';
+
+  var tip=document.getElementById('tourTip');
+  var dots='';for(var d=0;d<TOUR_STEPS.length;d++)dots+='<span class="tour-dot'+(d===i?' on':'')+'"></span>';
+  tip.innerHTML=
+    '<div class="tour-tip-step">Passo '+(i+1)+' de '+TOUR_STEPS.length+'</div>'+
+    '<h4>'+st.t+'</h4>'+
+    '<p>'+st.d+'</p>'+
+    '<div class="tour-tip-foot">'+
+      '<div class="tour-dots">'+dots+'</div>'+
+      '<div class="tour-btns">'+
+        (i>0?'<button class="tour-prev" onclick="tourShow('+(i-1)+')">‹ Voltar</button>':'')+
+        '<button class="tour-next" onclick="tourShow('+(i+1)+')">'+(i===TOUR_STEPS.length-1?'Concluir':'Próximo')+'</button>'+
+      '</div>'+
+    '</div>'+
+    '<button class="tour-skip" style="position:absolute;top:12px;right:14px" onclick="tourEnd()">✕ Pular</button>';
+  tip.style.position='fixed';
+
+  var tipW=280,tipH=tip.offsetHeight||160;
+  var top=r.bottom+pad+10;
+  if(top+tipH>window.innerHeight-12)top=r.top-pad-10-tipH;
+  if(top<12)top=12;
+  var left=r.left;
+  if(left+tipW>window.innerWidth-12)left=window.innerWidth-tipW-12;
+  if(left<12)left=12;
+  tip.style.top=top+'px';tip.style.left=left+'px';
+  tip.classList.add('on');
+}
+
+function tourEnd(){
+  _tourOn=false;
+  var hl=document.getElementById('tourHl'),tip=document.getElementById('tourTip');
+  if(hl)hl.remove();
+  if(tip)tip.remove();
+  tourSidebar(false);
+  navTo('dashboard');
+  localStorage.setItem('cb_tour_seen','1');
+}
+
+function maybeAutoTour(){
+  if(!localStorage.getItem('cb_tour_seen'))startTour();
 }
 </script>
 </body>
